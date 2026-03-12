@@ -538,7 +538,7 @@ function renderStepContent(stepIdx: number, subStepIdx: number, { inspectionRepo
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-1">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-1">
           {items.map(item => (
             <ItemRow key={item} label={item} />
           ))}
@@ -836,7 +836,7 @@ function renderStepContent(stepIdx: number, subStepIdx: number, { inspectionRepo
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-1">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-1">
           {defectItems.map(item => (
             <div key={item} className="flex items-center justify-between py-2.5 border-b border-gray-50 group hover:bg-gray-50/50 px-2 rounded-md transition-colors">
               <span className="text-[13px] text-gray-700 font-medium">{item}</span>
@@ -896,7 +896,7 @@ function renderStepContent(stepIdx: number, subStepIdx: number, { inspectionRepo
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-1">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-1">
           {knownConditions.map(item => (
             <div key={item} className="flex items-center justify-between py-2.5 border-b border-gray-50 group hover:bg-gray-50/50 px-2 rounded-md transition-colors">
               <div className="space-y-0.5">
