@@ -72,9 +72,9 @@ function SignatureBlock({ title, description }: { title: string; description: st
   const [date, setDate] = useState(new Date().toLocaleDateString('en-GB').split('/').join('-'));
 
   return (
-    <div className="p-6 bg-white rounded-2xl border border-gray-100 hover:border-indigo-100 transition-all group">
+    <div className="p-4 md:p-6 bg-white rounded-2xl border border-gray-100 hover:border-indigo-100 transition-all group">
       <h4 className="text-[14px] font-bold text-gray-900 mb-1">{title}</h4>
-      <p className="text-[12px] text-gray-500 mb-6">{description}</p>
+      <p className="text-[12px] text-gray-500 mb-4 md:mb-6">{description}</p>
       
       <div className="space-y-4">
         <Question label="Printed Name" type="text" placeholder="John Doe" />
@@ -446,7 +446,7 @@ export function SellerDisclosure() {
         </div>
 
         {/* Content Area */}
-        <div className="flex-1 bg-[#FAFAFA] p-4">
+        <div className="flex-1 bg-[#FAFAFA] p-3 md:p-6 lg:p-8 overflow-x-hidden">
           <div className="max-w-full">
             <AnimatePresence mode="wait">
               <motion.div
@@ -457,24 +457,24 @@ export function SellerDisclosure() {
                 transition={{ duration: 0.2 }}
                 className="bg-white rounded-2xl border border-[#EAEAEA] shadow-sm overflow-hidden"
               >
-                <div className="p-8">
-                  <div className="space-y-6">
+                <div className="p-4 md:p-8">
+                  <div className="space-y-6 md:space-y-8">
                     {renderStepContent(currentStep, currentSubstep, { inspectionReports, addInspectionRow, removeInspectionRow })}
                   </div>
                 </div>
 
-                <div className="px-8 py-5 bg-gray-50/50 border-t border-[#EAEAEA] flex items-center justify-between">
+                <div className="px-4 py-4 md:px-8 md:py-5 bg-gray-50/50 border-t border-[#EAEAEA] flex items-center justify-between">
                   <button 
                     onClick={prevStep}
                     disabled={currentStep === 0 && currentSubstep === 0}
-                    className="flex items-center gap-2 px-4 py-2 text-[13px] font-medium text-gray-600 hover:text-gray-900 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                    className="flex items-center gap-1 md:gap-2 px-3 py-2 md:px-4 md:py-2 text-[12px] md:text-[13px] font-medium text-gray-600 hover:text-gray-900 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                   >
                     <ChevronLeft className="w-4 h-4" />
                     Previous
                   </button>
                   <button 
                     onClick={nextStep}
-                    className="flex items-center gap-2 px-6 py-2 bg-indigo-600 text-white rounded-lg text-[13px] font-semibold hover:bg-indigo-700 shadow-sm shadow-indigo-200 transition-all active:scale-[0.98]"
+                    className="flex items-center gap-1 md:gap-2 px-4 py-2 md:px-6 md:py-2 bg-indigo-600 text-white rounded-lg text-[12px] md:text-[13px] font-semibold hover:bg-indigo-700 shadow-sm shadow-indigo-200 transition-all active:scale-[0.98]"
                   >
                     {currentStep === STEPS.length - 1 ? 'Finish & Sign' : 'Continue'}
                     {currentStep !== STEPS.length - 1 && <ChevronRight className="w-4 h-4" />}
@@ -483,7 +483,7 @@ export function SellerDisclosure() {
               </motion.div>
             </AnimatePresence>
 
-            <div className="mt-8 flex justify-center gap-8 text-[12px] text-gray-400 font-medium">
+            <div className="mt-6 md:mt-8 flex flex-col md:flex-row items-center justify-center gap-3 md:gap-8 text-[11px] md:text-[12px] text-gray-400 font-medium">
               <span className="flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5" /> Encrypted Connection</span>
               <span className="flex items-center gap-1.5"><CheckCircle2 className="w-3.5 h-3.5" /> Auto-saved</span>
             </div>
@@ -500,13 +500,13 @@ function renderStepContent(stepIdx: number, subStepIdx: number, { inspectionRepo
   if (stepIdx === 0 && subStepIdx === 0) {
       return (
         <div className="space-y-8">
-          <div className="flex items-center gap-4 border-b border-gray-100 pb-4">
-            <div className="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-500/20">
-              <Home className="w-6 h-6" />
+          <div className="flex items-center gap-3 md:gap-4 border-b border-gray-100 pb-3 md:pb-4">
+            <div className="w-10 h-10 md:w-12 md:h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-500/20 shrink-0">
+              <Home className="w-5 h-5 md:w-6 md:h-6" />
             </div>
             <div>
-              <h3 className="text-[16px] font-bold text-gray-900 uppercase tracking-tight">1. Property Address & Occupancy</h3>
-              <p className="text-[12px] text-gray-500">Provide the property location and your residency status.</p>
+              <h3 className="text-[15px] md:text-[16px] font-bold text-gray-900 uppercase tracking-tight leading-tight">1. Property Address & Occupancy</h3>
+              <p className="text-[11px] md:text-[12px] text-gray-500 mt-0.5">Provide the property location and your residency status.</p>
             </div>
           </div>
 
@@ -1082,13 +1082,13 @@ function renderStepContent(stepIdx: number, subStepIdx: number, { inspectionRepo
 
     return (
       <div className="space-y-10 pb-10">
-        <div className="flex items-center gap-4 border-b border-gray-100 pb-4">
-          <div className="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-500/20">
-            <Settings className="w-6 h-6" />
+        <div className="flex items-center gap-3 md:gap-4 border-b border-gray-100 pb-3 md:pb-4">
+          <div className="w-10 h-10 md:w-12 md:h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-500/20 shrink-0">
+            <Settings className="w-5 h-5 md:w-6 md:h-6" />
           </div>
           <div>
-            <h3 className="text-[16px] font-bold text-gray-900 uppercase tracking-tight">8. Additional Disclosures & Reports</h3>
-            <p className="text-[12px] text-gray-500">Other conditions and legal disclosures affecting the property.</p>
+            <h3 className="text-[15px] md:text-[16px] font-bold text-gray-900 uppercase tracking-tight leading-tight">8. Additional Disclosures & Reports</h3>
+            <p className="text-[11px] md:text-[12px] text-gray-500 mt-0.5">Other conditions and legal disclosures affecting the property.</p>
           </div>
         </div>
 
@@ -1203,14 +1203,14 @@ function renderStepContent(stepIdx: number, subStepIdx: number, { inspectionRepo
         </div>
 
         {/* Section 9: Inspection Reports */}
-        <div className="pt-12 space-y-8">
-          <div className="flex items-center gap-4 border-b border-gray-100 pb-4">
-            <div className="w-12 h-12 bg-emerald-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-emerald-500/20">
-              <Building2 className="w-6 h-6" />
+        <div className="pt-8 md:pt-12 space-y-6 md:space-y-8">
+          <div className="flex items-center gap-3 md:gap-4 border-b border-gray-100 pb-3 md:pb-4">
+            <div className="w-10 h-10 md:w-12 md:h-12 bg-emerald-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-emerald-500/20 shrink-0">
+              <Building2 className="w-5 h-5 md:w-6 md:h-6" />
             </div>
             <div>
-              <h3 className="text-[16px] font-bold text-gray-900 uppercase tracking-tight">9. Written Inspection Reports</h3>
-              <p className="text-[12px] text-gray-500 italic">Within the last 4 years, written reports from licensed inspectors.</p>
+              <h3 className="text-[15px] md:text-[16px] font-bold text-gray-900 uppercase tracking-tight leading-tight">9. Written Inspection Reports</h3>
+              <p className="text-[11px] md:text-[12px] text-gray-500 mt-0.5 italic">Within the last 4 years, written reports from licensed inspectors.</p>
             </div>
           </div>
 
@@ -1220,44 +1220,46 @@ function renderStepContent(stepIdx: number, subStepIdx: number, { inspectionRepo
               options={['Yes', 'No']}
             />
 
-            <div className="overflow-hidden rounded-2xl border border-gray-100 bg-gray-50/30 mt-6">
-              <table className="w-full text-left border-collapse">
-                <thead className="bg-gray-100/50 border-b border-gray-100">
-                  <tr>
-                    <th className="px-6 py-4 text-[11px] font-bold text-gray-500 uppercase tracking-widest">Inspection Date</th>
-                    <th className="px-6 py-4 text-[11px] font-bold text-gray-500 uppercase tracking-widest">Type</th>
-                    <th className="px-6 py-4 text-[11px] font-bold text-gray-500 uppercase tracking-widest">Inspector Name</th>
-                    <th className="px-6 py-4 text-[11px] font-bold text-gray-500 uppercase tracking-widest w-24 text-center">Pages</th>
-                    <th className="px-6 py-4 text-[11px] font-bold text-gray-500 uppercase tracking-widest w-16"></th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100">
-                  {inspectionReports.map((report, idx) => (
-                    <tr key={idx} className="bg-white hover:bg-gray-50/50 transition-colors group">
-                      <td className="px-6 py-4">
-                        <input type="text" placeholder="MM/DD/YYYY" className="w-full bg-transparent text-[13px] outline-none" />
-                      </td>
-                      <td className="px-6 py-4">
-                        <input type="text" placeholder="Enter type" className="w-full bg-transparent text-[13px] outline-none" />
-                      </td>
-                      <td className="px-6 py-4">
-                        <input type="text" placeholder="Enter name" className="w-full bg-transparent text-[13px] outline-none" />
-                      </td>
-                      <td className="px-6 py-4">
-                        <input type="text" placeholder="0" className="w-full bg-transparent text-[13px] outline-none text-center" />
-                      </td>
-                      <td className="px-6 py-4 text-center">
-                        <button 
-                          onClick={() => removeInspectionRow(idx)}
-                          className="opacity-0 group-hover:opacity-100 p-2 text-gray-400 hover:text-red-500 transition-all"
-                        >
-                          ✕
-                        </button>
-                      </td>
+            <div className="rounded-2xl border border-gray-100 bg-gray-50/30 mt-6 w-full overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse min-w-[500px]">
+                  <thead className="bg-gray-100/50 border-b border-gray-100">
+                    <tr>
+                      <th className="px-4 md:px-6 py-4 text-[11px] font-bold text-gray-500 uppercase tracking-widest whitespace-nowrap">Inspection Date</th>
+                      <th className="px-4 md:px-6 py-4 text-[11px] font-bold text-gray-500 uppercase tracking-widest whitespace-nowrap">Type</th>
+                      <th className="px-4 md:px-6 py-4 text-[11px] font-bold text-gray-500 uppercase tracking-widest whitespace-nowrap">Inspector Name</th>
+                      <th className="px-4 md:px-6 py-4 text-[11px] font-bold text-gray-500 uppercase tracking-widest w-24 text-center whitespace-nowrap">Pages</th>
+                      <th className="px-2 md:px-6 py-4 text-[11px] font-bold text-gray-500 uppercase tracking-widest w-12 md:w-16"></th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    {inspectionReports.map((report, idx) => (
+                      <tr key={idx} className="bg-white hover:bg-gray-50/50 transition-colors group">
+                        <td className="px-4 md:px-6 py-3 md:py-4">
+                          <input type="text" placeholder="MM/DD/YYYY" className="w-full bg-transparent text-[13px] outline-none" />
+                        </td>
+                        <td className="px-4 md:px-6 py-3 md:py-4">
+                          <input type="text" placeholder="Enter type" className="w-full bg-transparent text-[13px] outline-none" />
+                        </td>
+                        <td className="px-4 md:px-6 py-3 md:py-4">
+                          <input type="text" placeholder="Enter name" className="w-full bg-transparent text-[13px] outline-none" />
+                        </td>
+                        <td className="px-4 md:px-6 py-3 md:py-4">
+                          <input type="text" placeholder="0" className="w-full bg-transparent text-[13px] outline-none text-center" />
+                        </td>
+                        <td className="px-2 md:px-6 py-3 md:py-4 text-center">
+                          <button 
+                            onClick={() => removeInspectionRow(idx)}
+                            className="opacity-100 md:opacity-0 md:group-hover:opacity-100 p-2 text-gray-400 hover:text-red-500 transition-all flex items-center justify-center mx-auto"
+                          >
+                            ✕
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
               <button 
                 onClick={addInspectionRow}
                 className="w-full py-4 bg-white border-t border-gray-100 text-[12px] font-bold text-indigo-600 hover:bg-indigo-50/30 transition-all flex items-center justify-center gap-2"
@@ -1290,14 +1292,14 @@ function renderStepContent(stepIdx: number, subStepIdx: number, { inspectionRepo
     ];
 
     return (
-      <div className="space-y-12 pb-10">
-        <div className="flex items-center gap-4 border-b border-gray-100 pb-4">
-          <div className="w-12 h-12 bg-amber-500 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-amber-500/20">
-            <Zap className="w-6 h-6" />
+      <div className="space-y-8 md:space-y-12 pb-10">
+        <div className="flex items-center gap-3 md:gap-4 border-b border-gray-100 pb-3 md:pb-4">
+          <div className="w-10 h-10 md:w-12 md:h-12 bg-amber-500 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-amber-500/20 shrink-0">
+            <Zap className="w-5 h-5 md:w-6 md:h-6" />
           </div>
           <div>
-            <h3 className="text-[16px] font-bold text-gray-900 uppercase tracking-tight">Exemptions, Insurance & Utilities</h3>
-            <p className="text-[12px] text-gray-500 italic">Disclosures regarding tax exemptions, insurance claims, and service providers.</p>
+            <h3 className="text-[15px] md:text-[16px] font-bold text-gray-900 uppercase tracking-tight leading-tight">Exemptions, Insurance & Utilities</h3>
+            <p className="text-[11px] md:text-[12px] text-gray-500 mt-0.5 italic">Disclosures regarding tax exemptions, insurance claims, and service providers.</p>
           </div>
         </div>
 
@@ -1429,14 +1431,14 @@ function renderStepContent(stepIdx: number, subStepIdx: number, { inspectionRepo
 
   if (stepIdx === 6) {
     return (
-      <div className="space-y-12 pb-10">
-        <div className="flex items-center gap-4 border-b border-gray-100 pb-4">
-          <div className="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-500/20">
-            <ShieldCheck className="w-6 h-6" />
+      <div className="space-y-8 md:space-y-12 pb-10">
+        <div className="flex items-center gap-3 md:gap-4 border-b border-gray-100 pb-3 md:pb-4">
+          <div className="w-10 h-10 md:w-12 md:h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-500/20 shrink-0">
+            <ShieldCheck className="w-5 h-5 md:w-6 md:h-6" />
           </div>
           <div>
-            <h3 className="text-[16px] font-bold text-gray-900 uppercase tracking-tight">Signatures & Acknowledgments</h3>
-            <p className="text-[12px] text-gray-500 italic">Final step: Authenticate and acknowledge the disclosure.</p>
+            <h3 className="text-[15px] md:text-[16px] font-bold text-gray-900 uppercase tracking-tight leading-tight">Signatures & Acknowledgments</h3>
+            <p className="text-[11px] md:text-[12px] text-gray-500 mt-0.5 italic">Final step: Authenticate and acknowledge the disclosure.</p>
           </div>
         </div>
 
