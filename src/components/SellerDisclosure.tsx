@@ -14,7 +14,8 @@ import {
   ShieldCheck,
   Building2,
   Zap,
-  Waves
+  Waves,
+  PanelLeftOpen
 } from 'lucide-react';
 
 // --- Shared Components ---
@@ -28,11 +29,11 @@ function Question({ label, description, type = 'radio', options = ['Yes', 'No'],
       </div>
       
       {type === 'radio' && (
-        <div className="flex gap-4">
+        <div className="grid grid-cols-2 sm:flex gap-3 md:gap-4">
           {options.map((opt: string) => (
             <label key={opt} className="flex-1 group cursor-pointer">
               <input type="radio" name={label} className="sr-only peer" />
-              <div className="px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-[13px] text-gray-600 font-medium text-center peer-checked:border-indigo-600 peer-checked:bg-indigo-50 peer-checked:text-indigo-700 hover:border-gray-300 transition-all">
+              <div className="px-4 py-3 md:py-3 bg-white border-2 border-gray-100 rounded-xl text-[12px] md:text-[13px] text-gray-500 font-bold text-center peer-checked:border-indigo-600 peer-checked:bg-indigo-50 peer-checked:text-indigo-700 hover:border-gray-200 transition-all shadow-sm active:scale-95">
                 {opt}
               </div>
             </label>
@@ -127,13 +128,13 @@ function SignatureBlock({ title, description }: { title: string; description: st
 
 function ItemRow({ label, ...props }: { label: string; [key: string]: any }) {
   return (
-    <div className="flex items-center justify-between py-2 border-b border-gray-50 group hover:bg-gray-50/50 px-2 rounded-md transition-colors" {...props}>
-      <span className="text-[13px] text-gray-700 font-medium max-w-[200px] leading-tight">{label}</span>
-      <div className="flex gap-1 bg-gray-100/50 p-0.5 rounded-lg border border-gray-200 shrink-0 ml-4">
-        {['Yes', 'No', 'U'].map((opt) => (
+    <div className="flex items-center justify-between py-2 md:py-3 border-b border-gray-50 group hover:bg-gray-50/50 px-2 rounded-xl transition-all" {...props}>
+      <span className="text-[12px] md:text-[13px] text-gray-700 font-semibold pr-4 leading-snug">{label}</span>
+      <div className="flex gap-1 bg-gray-100/50 p-0.5 rounded-lg border border-gray-200 shrink-0 ml-auto">
+        {['Y', 'N', 'U'].map((opt) => (
           <label key={opt} className="cursor-pointer">
             <input type="radio" name={label} className="sr-only peer" />
-            <div className="w-8 h-7 flex items-center justify-center text-[10px] font-bold text-gray-400 peer-checked:bg-white peer-checked:text-indigo-600 peer-checked:shadow-sm rounded-md transition-all">
+            <div className="w-8 h-8 md:w-9 md:h-8 flex items-center justify-center text-[10px] md:text-[11px] font-black text-gray-400 peer-checked:bg-white peer-checked:text-indigo-600 peer-checked:shadow-[0_2px_4px_rgba(0,0,0,0.05)] rounded-md transition-all active:scale-90">
               {opt}
             </div>
           </label>
@@ -147,32 +148,32 @@ function ComplexItemRow({ label, subOptions }: { label: string; subOptions: any[
   const [selected, setSelected] = useState<string | null>(null);
 
   return (
-    <div className={`rounded-2xl border-2 transition-all duration-300 ${
+    <div className={`rounded-3xl border-2 transition-all duration-500 overflow-hidden ${
       selected === 'Yes' 
-        ? 'border-indigo-500 bg-white shadow-xl shadow-indigo-500/10' 
+        ? 'border-indigo-500 bg-white shadow-2xl shadow-indigo-500/10' 
         : selected === 'No' || selected === 'U'
-          ? 'border-gray-200 bg-gray-50/30 shadow-none'
+          ? 'border-gray-200 bg-gray-50/20 shadow-none'
           : 'border-gray-100 bg-white shadow-sm'
     }`}>
-      <div className="p-6">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div className="p-4 md:p-8">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-8">
           <div className="flex items-center gap-4">
-            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all ${
+            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all shadow-sm ${
               selected === 'Yes' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-400'
             }`}>
               <Settings className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-[15px] font-bold text-gray-900">{label}</h3>
-              <p className="text-[12px] text-gray-500">System status and configuration</p>
+              <h3 className="text-[14px] md:text-[15px] font-black text-gray-900 tracking-tight">{label}</h3>
+              <p className="text-[11px] md:text-[12px] text-gray-500 font-medium">Status & verification</p>
             </div>
           </div>
           
           <div className="flex gap-2 p-1 bg-gray-100 rounded-xl border border-gray-200 w-fit shrink-0">
             {[
-              { id: 'Yes', label: 'Yes', color: 'peer-checked:bg-emerald-500 peer-checked:text-white' },
-              { id: 'No', label: 'No', color: 'peer-checked:bg-gray-700 peer-checked:text-white' },
-              { id: 'U', label: 'Unknown', color: 'peer-checked:bg-gray-400 peer-checked:text-white' }
+              { id: 'Yes', label: 'Y', color: 'peer-checked:bg-emerald-500 peer-checked:text-white' },
+              { id: 'No', label: 'N', color: 'peer-checked:bg-gray-700 peer-checked:text-white' },
+              { id: 'U', label: 'U', color: 'peer-checked:bg-gray-400 peer-checked:text-white' }
             ].map((opt) => (
               <label key={opt.id} className="cursor-pointer">
                 <input 
@@ -276,11 +277,11 @@ const STEPS: Step[] = [
 export function SellerDisclosure() {
   const [currentStep, setCurrentStep] = useState(0);
   const [currentSubstep, setCurrentSubstep] = useState(0);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [formData, setFormData] = useState<any>({});
   const [inspectionReports, setInspectionReports] = useState<any[]>([
     { date: '', type: '', name: '', pages: '' }
   ]);
-
   const addInspectionRow = () => {
     setInspectionReports([...inspectionReports, { date: '', type: '', name: '', pages: '' }]);
   };
@@ -320,43 +321,70 @@ export function SellerDisclosure() {
       `}</style>
       
       {/* Header */}
-      <div className="h-16 flex items-center px-8 border-b border-[#EAEAEA] bg-white sticky top-0 z-40">
-        <div className="flex items-center gap-3">
-          <div className="p-2 bg-indigo-50 rounded-lg">
-            <FileText className="w-5 h-5 text-indigo-600" />
+      <div className="h-16 md:h-20 flex items-center px-4 md:px-8 border-b border-[#EAEAEA] bg-white sticky top-0 z-40 py-4">
+        <button 
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          className="p-2 mr-2 lg:hidden text-gray-400 hover:text-indigo-600 transition-colors"
+        >
+          {isMobileMenuOpen ? <ChevronLeft className="w-6 h-6" /> : <PanelLeftOpen className="w-6 h-6" />}
+        </button>
+
+        <div className="flex items-center gap-2 md:gap-3 overflow-hidden">
+          <div className="p-1.5 md:p-2 bg-indigo-50 rounded-lg shrink-0">
+            <FileText className="w-4 h-4 md:w-5 md:h-5 text-indigo-600" />
           </div>
-          <div>
-            <h1 className="text-[16px] font-semibold text-gray-900">Seller's Property Disclosure</h1>
-            <p className="text-[12px] text-gray-500">Legal disclosure of property conditions and history</p>
+          <div className="overflow-hidden">
+            <h1 className="text-[14px] md:text-[16px] font-semibold text-gray-900 truncate">Seller's Disclosure</h1>
+            <p className="hidden md:block text-[12px] text-gray-500 whitespace-nowrap">Legal disclosure of property conditions</p>
           </div>
         </div>
-        <div className="ml-auto flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <span className="text-[12px] font-medium text-gray-500">Progress</span>
-            <div className="w-32 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+
+        <div className="ml-auto flex items-center gap-3 md:gap-4">
+          <div className="hidden sm:flex items-center gap-2">
+            <span className="text-[11px] md:text-[12px] font-medium text-gray-500 uppercase tracking-wider">Progress</span>
+            <div className="w-20 md:w-32 h-1.5 bg-gray-100 rounded-full overflow-hidden">
               <div 
-                className="h-full bg-indigo-600 transition-all duration-500" 
+                className="h-full bg-indigo-600 transition-all duration-500 shadow-[0_0_8px_rgba(79,70,229,0.3)]" 
                 style={{ width: `${((currentStep / (STEPS.length - 1)) * 100)}%` }}
               />
             </div>
-            <span className="text-[12px] font-bold text-indigo-600">{Math.round((currentStep / (STEPS.length - 1)) * 100)}%</span>
+            <span className="text-[11px] md:text-[12px] font-black text-indigo-600">{Math.round((currentStep / (STEPS.length - 1)) * 100)}%</span>
           </div>
-          <button className="px-4 py-1.5 text-[13px] font-medium text-indigo-600 border border-indigo-200 bg-indigo-50/50 rounded-md hover:bg-indigo-50 transition-colors">
-            Save Draft
+          <button className="px-3 md:px-4 py-1.5 text-[12px] md:text-[13px] font-bold text-indigo-600 border border-indigo-200 bg-indigo-50/50 rounded-lg hover:bg-indigo-600 hover:text-white transition-all shadow-sm active:scale-95">
+            Save
           </button>
         </div>
       </div>
 
-      <div className="flex flex-1">
-        {/* Sidebar Navigation */}
-        <div className="w-72 border-r border-[#EAEAEA] bg-white p-6 sticky top-0 h-[calc(100vh-50px)] overflow-y-auto hide-scrollbar">
+      <div className="flex flex-1 relative">
+        {/* Mobile Navigation Backdrop */}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="fixed inset-0 bg-gray-900/40 backdrop-blur-sm z-40 lg:hidden"
+            />
+          )}
+        </AnimatePresence>
+
+        <div 
+          className={`
+            fixed lg:sticky top-0 left-0 h-[calc(100vh-64px)] lg:h-[calc(100vh-80px)] 
+            w-[280px] lg:w-80 border-r border-[#EAEAEA] bg-white p-6 z-50 lg:z-0 
+            overflow-y-auto hide-scrollbar transition-transform duration-300 ease-in-out
+            ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+          `}
+        >
           <div className="space-y-1">
             {STEPS.map((step, index) => (
               <div key={step.id}>
                 <div 
-                  className={`flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-all ${
+                  className={`flex items-center gap-3 px-3 py-3 rounded-xl cursor-pointer transition-all ${
                     currentStep === index 
-                    ? 'bg-indigo-50 text-indigo-700 font-medium' 
+                    ? 'bg-indigo-50 text-indigo-700 font-bold shadow-sm' 
                     : index < currentStep 
                       ? 'text-emerald-600 hover:bg-gray-50' 
                       : 'text-gray-500 hover:bg-gray-50'
@@ -364,30 +392,36 @@ export function SellerDisclosure() {
                   onClick={() => {
                     setCurrentStep(index);
                     setCurrentSubstep(0);
+                    setIsMobileMenuOpen(false);
                   }}
                 >
-                  <div className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-[10px] ${
+                  <div className={`flex-shrink-0 w-7 h-7 rounded-xl flex items-center justify-center text-[11px] font-black ${
                     currentStep === index 
-                    ? 'bg-indigo-600 text-white' 
+                    ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-200' 
                     : index < currentStep 
-                      ? 'bg-emerald-500 text-white' 
-                      : 'border border-gray-200 text-gray-400'
+                      ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-100' 
+                      : 'border-2 border-gray-100 text-gray-400'
                   }`}>
-                    {index < currentStep ? <CheckCircle2 className="w-3.5 h-3.5" /> : index + 1}
+                    {index < currentStep ? <CheckCircle2 className="w-4 h-4" /> : index + 1}
                   </div>
-                  <span className="text-[13px]">{step.title}</span>
+                  <span className="text-[13px] tracking-tight">{step.title}</span>
                 </div>
                 
                 {/* Nested Substeps */}
                 {step.substeps && currentStep === index && (
-                  <div className="ml-9 mt-1 space-y-1 border-l-2 border-indigo-100 pl-4 py-1">
+                  <div className="ml-10 mt-2 space-y-1 border-l-2 border-indigo-100/50 pl-5 py-2">
                     {step.substeps.map((sub, sIdx) => (
                       <div 
                         key={sub}
-                        className={`text-[12px] py-1.5 cursor-pointer transition-colors ${
-                          currentSubstep === sIdx ? 'text-indigo-600 font-medium' : 'text-gray-400 hover:text-gray-600'
+                        className={`text-[12px] py-2 cursor-pointer transition-all rounded-lg px-2 ${
+                          currentSubstep === sIdx 
+                          ? 'text-indigo-600 font-bold bg-indigo-50/30' 
+                          : 'text-gray-400 hover:text-gray-600 hover:bg-gray-50/50'
                         }`}
-                        onClick={() => setCurrentSubstep(sIdx)}
+                        onClick={() => {
+                          setCurrentSubstep(sIdx);
+                          setIsMobileMenuOpen(false);
+                        }}
                       >
                         {sub}
                       </div>
@@ -398,13 +432,13 @@ export function SellerDisclosure() {
             ))}
           </div>
 
-          <div className="mt-8 p-4 bg-orange-50/50 rounded-xl border border-orange-100">
-            <div className="flex gap-3">
-              <AlertTriangle className="w-4 h-4 text-orange-500 flex-shrink-0" />
+          <div className="mt-8 p-5 bg-orange-50/50 rounded-2xl border border-orange-100">
+            <div className="flex gap-4">
+              <AlertTriangle className="w-5 h-5 text-orange-500 flex-shrink-0" />
               <div>
-                <p className="text-[11px] font-semibold text-orange-800 uppercase tracking-wider mb-1">Legal Notice</p>
-                <p className="text-[11px] text-orange-700 leading-relaxed">
-                  Provide accurate information to the best of your knowledge. Material omissions can lead to legal liability.
+                <p className="text-[11px] font-black text-orange-800 uppercase tracking-widest mb-1.5">Expert Tip</p>
+                <p className="text-[12px] text-orange-700 leading-relaxed font-medium">
+                  Be as detailed as possible. Accurate disclosures build trust and avoid future legal issues.
                 </p>
               </div>
             </div>
@@ -463,8 +497,7 @@ export function SellerDisclosure() {
 function renderStepContent(stepIdx: number, subStepIdx: number, { inspectionReports, addInspectionRow, removeInspectionRow }: any) {
     // Mock content for each step to demonstrate the UI
 
-  if (stepIdx === 0) {
-    if (subStepIdx === 0) {
+  if (stepIdx === 0 && subStepIdx === 0) {
       return (
         <div className="space-y-8">
           <div className="flex items-center gap-4 border-b border-gray-100 pb-4">
@@ -510,10 +543,11 @@ function renderStepContent(stepIdx: number, subStepIdx: number, { inspectionRepo
           </div>
         </div>
       );
-    }
+  }
     
+  if (stepIdx === 0 && subStepIdx === 1) {
     // Step 2: Property Items
-    const items = [
+      const items = [
       "Cable TV Wiring", "Carbon Monoxide Det.", "Ceiling Fans", "Cooktop", "Dishwasher", 
       "Disposal", "Emergency Escape Ladder(s)", "Exhaust Fans", "Fences", "Fire Detection Equip.", 
       "French Drain", "Gas Fixtures", "Liquid Propane Gas: LP Community (Captive)", 
@@ -528,13 +562,22 @@ function renderStepContent(stepIdx: number, subStepIdx: number, { inspectionRepo
 
     return (
       <div className="space-y-8">
-        <div className="flex items-center gap-4 border-b border-gray-100 pb-4">
-          <div className="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-500/20">
-            <Wrench className="w-6 h-6" />
+        <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-gray-100 pb-6 gap-4">
+          <div className="flex items-center gap-4">
+            <div className="w-10 h-10 md:w-12 md:h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-500/20 shrink-0">
+              <Wrench className="w-5 h-5 md:w-6 md:h-6" />
+            </div>
+            <div>
+              <h3 className="text-[15px] md:text-[16px] font-black text-gray-900 uppercase tracking-tight">2. Property Items & Equipment</h3>
+              <p className="text-[11px] md:text-[12px] text-gray-500 font-medium">Functional status of property assets</p>
+            </div>
           </div>
-          <div>
-            <h3 className="text-[16px] font-bold text-gray-900 uppercase tracking-tight">2. Property Items & Equipment</h3>
-            <p className="text-[12px] text-gray-500">Check the items currently on the property and their functional status.</p>
+          <div className="flex items-center gap-2 px-3 py-2 bg-gray-50 rounded-xl border border-gray-200 self-start md:self-center shrink-0">
+            <span className="text-[11px] font-black text-indigo-600">Y</span><span className="text-[10px] text-gray-400 font-bold">=Yes</span>
+            <span className="text-[10px] text-gray-300">|</span>
+            <span className="text-[11px] font-black text-indigo-600">N</span><span className="text-[10px] text-gray-400 font-bold">=No</span>
+            <span className="text-[10px] text-gray-300">|</span>
+            <span className="text-[11px] font-black text-indigo-600">U</span><span className="text-[10px] text-gray-400 font-bold">=Unknown</span>
           </div>
         </div>
 
@@ -548,157 +591,82 @@ function renderStepContent(stepIdx: number, subStepIdx: number, { inspectionRepo
   }
 
   if (stepIdx === 0 && subStepIdx === 2) {
+    const systemItems = [
+      "Central A/C", "Evaporative Coolers", "Wall/Window AC Units", "Attic Fan(s)",
+      "Central Heat", "Other Heat", "Oven", "Fireplace & Chimney",
+      "Carport", "Garage", "Garage Door Openers", "Satellite Dish & Controls",
+      "Security System", "Solar Panels", "Water Heater", "Water Softener",
+      "Other Leased Item(s)", "Underground Lawn Sprinkler"
+    ];
+
     return (
-      <div className="space-y-8 pb-20">
-        <div className="flex items-center gap-4 border-b border-gray-100 pb-4">
-          <div className="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-500/20">
-            <Settings className="w-6 h-6" />
+      <div className="space-y-8">
+        <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-gray-100 pb-6 gap-4">
+          <div className="flex items-center gap-4">
+            <div className="w-10 h-10 md:w-12 md:h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-500/20 shrink-0">
+              <Settings className="w-5 h-5 md:w-6 md:h-6" />
+            </div>
+            <div>
+              <h3 className="text-[15px] md:text-[16px] font-black text-gray-900 uppercase tracking-tight">3. Systems & Additional Information</h3>
+              <p className="text-[11px] md:text-[12px] text-gray-500 font-medium">Heating, cooling, and utility details</p>
+            </div>
           </div>
-          <div>
-            <h3 className="text-[16px] font-bold text-gray-900 uppercase tracking-tight">3. Systems & Additional Information</h3>
-            <p className="text-[12px] text-gray-500">Provide detailed information about heating, cooling, and other major systems.</p>
+          <div className="flex items-center gap-2 px-3 py-2 bg-gray-50 rounded-xl border border-gray-200 self-start md:self-center shrink-0">
+            <span className="text-[11px] font-black text-indigo-600">Y</span><span className="text-[10px] text-gray-400 font-bold">=Yes</span>
+            <span className="text-[10px] text-gray-300">|</span>
+            <span className="text-[11px] font-black text-indigo-600">N</span><span className="text-[10px] text-gray-400 font-bold">=No</span>
+            <span className="text-[10px] text-gray-300">|</span>
+            <span className="text-[11px] font-black text-indigo-600">U</span><span className="text-[10px] text-gray-400 font-bold">=Unknown</span>
           </div>
         </div>
 
-        <div className="space-y-4">
-          <ComplexItemRow 
-            label="Central A/C" 
-            subOptions={[
-              { label: 'Fuel Types', type: 'multi-select', options: ['Electric', 'Gas'] },
-              { label: 'Number of Units', type: 'text', placeholder: 'e.g. 1' }
-            ]}
-          />
-          <ComplexItemRow 
-            label="Evaporative Coolers" 
-            subOptions={[{ label: 'Number of Units', type: 'text', placeholder: 'e.g. 1' }]}
-          />
-          <ComplexItemRow 
-            label="Wall/Window AC Units" 
-            subOptions={[{ label: 'Number of Units', type: 'text', placeholder: 'e.g. 1' }]}
-          />
-          <ComplexItemRow 
-            label="Attic Fan(s)" 
-            subOptions={[{ label: 'Description', type: 'text', placeholder: 'If yes, describe...' }]}
-          />
-          <ComplexItemRow 
-            label="Central Heat" 
-            subOptions={[
-              { label: 'Fuel Types', type: 'multi-select', options: ['Electric', 'Gas'] },
-              { label: 'Number of Units', type: 'text', placeholder: 'e.g. 1' }
-            ]}
-          />
-          <ComplexItemRow 
-            label="Other Heat" 
-            subOptions={[{ label: 'Description', type: 'text', placeholder: 'If yes, describe...' }]}
-          />
-          <ComplexItemRow 
-            label="Oven" 
-            subOptions={[
-              { label: 'Number of Ovens', type: 'text', placeholder: 'e.g. 1' },
-              { label: 'Fuel Types', type: 'multi-select', options: ['Electric', 'Gas', 'Other'] },
-              { label: 'Other Description', type: 'text', placeholder: 'If other, specify...' }
-            ]}
-          />
-          <ComplexItemRow 
-            label="Fireplace & Chimney" 
-            subOptions={[
-              { label: 'Types', type: 'multi-select', options: ['Wood', 'Gas Logs', 'Mock', 'Other'] },
-              { label: 'Other Description', type: 'text', placeholder: 'If other, specify...' }
-            ]}
-          />
-          <ComplexItemRow 
-            label="Carport" 
-            subOptions={[{ label: 'Type', type: 'select', options: ['Attached', 'Not Attached'] }]}
-          />
-          <ComplexItemRow 
-            label="Garage" 
-            subOptions={[{ label: 'Type', type: 'select', options: ['Attached', 'Not Attached'] }]}
-          />
-          <ComplexItemRow 
-            label="Garage Door Openers" 
-            subOptions={[
-              { label: 'Number of Units', type: 'text', placeholder: 'e.g. 2' },
-              { label: 'Number of Remotes', type: 'text', placeholder: 'e.g. 2' }
-            ]}
-          />
-          <ComplexItemRow 
-            label="Satellite Dish & Controls" 
-            subOptions={[
-              { label: 'Ownership Type', type: 'select', options: ['Owned', 'Leased'] },
-              { label: 'Leased From', type: 'text', placeholder: 'Operator name' }
-            ]}
-          />
-          <ComplexItemRow 
-            label="Security System" 
-            subOptions={[
-              { label: 'Ownership Type', type: 'select', options: ['Owned', 'Leased'] },
-              { label: 'Leased From', type: 'text', placeholder: 'Operator name' }
-            ]}
-          />
-          <ComplexItemRow 
-            label="Solar Panels" 
-            subOptions={[
-              { label: 'Ownership Type', type: 'select', options: ['Owned', 'Leased'] },
-              { label: 'Leased From', type: 'text', placeholder: 'Company name' }
-            ]}
-          />
-          <ComplexItemRow 
-            label="Water Heater" 
-            subOptions={[
-              { label: 'Fuel Types', type: 'multi-select', options: ['Electric', 'Gas', 'Other'] },
-              { label: 'Other Description', type: 'text', placeholder: 'If other, specify...' },
-              { label: 'Number of Units', type: 'text', placeholder: 'e.g. 1' }
-            ]}
-          />
-          <ComplexItemRow 
-            label="Water Softener" 
-            subOptions={[
-              { label: 'Ownership Type', type: 'select', options: ['Owned', 'Leased'] },
-              { label: 'Leased From', type: 'text', placeholder: 'Company name' }
-            ]}
-          />
-          <ComplexItemRow 
-            label="Other Leased Item(s)" 
-            subOptions={[{ label: 'Description', type: 'text', placeholder: 'If yes, describe...' }]}
-          />
-          <ComplexItemRow 
-            label="Underground Lawn Sprinkler" 
-            subOptions={[
-              { label: 'Type', type: 'select', options: ['Automatic', 'Manual'] },
-              { label: 'Areas Covered', type: 'text', placeholder: 'Describe areas...' }
-            ]}
-          />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-1">
+          {systemItems.map(item => (
+            <ItemRow key={item} label={item} />
+          ))}
         </div>
       </div>
     );
   }
 
+
   if (stepIdx === 0 && subStepIdx === 3) {
     return (
       <div className="space-y-8 pb-10">
-        <div className="flex items-center gap-4 border-b border-gray-100 pb-4">
-          <div className="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-blue-500/20">
-            <Building2 className="w-6 h-6" />
+        <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-gray-100 pb-6 gap-4">
+          <div className="flex items-center gap-4">
+            <div className="w-10 h-10 md:w-12 md:h-12 bg-blue-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-blue-500/20 shrink-0">
+              <Building2 className="w-5 h-5 md:w-6 md:h-6" />
+            </div>
+            <div>
+              <h3 className="text-[15px] md:text-[16px] font-black text-gray-900 uppercase tracking-tight">4. Structural, Utilities & Roof</h3>
+              <p className="text-[11px] md:text-[12px] text-gray-500 font-medium">Infrastructure and construction details</p>
+            </div>
           </div>
-          <div>
-            <h3 className="text-[16px] font-bold text-gray-900 uppercase tracking-tight">4. Structural, Utilities & Roof</h3>
-            <p className="text-[12px] text-gray-500">Property infrastructure, water supply, and construction era details.</p>
+          <div className="flex items-center gap-2 px-3 py-2 bg-gray-50 rounded-xl border border-gray-200 self-start md:self-center shrink-0">
+            <span className="text-[11px] font-black text-indigo-600">Y</span><span className="text-[10px] text-gray-400 font-bold">=Yes</span>
+            <span className="text-[10px] text-gray-300">|</span>
+            <span className="text-[11px] font-black text-indigo-600">N</span><span className="text-[10px] text-gray-400 font-bold">=No</span>
+            <span className="text-[10px] text-gray-300">|</span>
+            <span className="text-[11px] font-black text-indigo-600">U</span><span className="text-[10px] text-gray-400 font-bold">=Unknown</span>
           </div>
         </div>
 
+
+
         <div className="grid grid-cols-1 gap-6">
           {/* Septic Section */}
-          <div className="group relative bg-white rounded-2xl border-2 border-gray-100 p-6 transition-all hover:border-blue-500/30 hover:shadow-xl hover:shadow-blue-500/5">
+          <div className="bg-white rounded-2xl border-2 border-gray-100 p-6">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
               <div className="space-y-1">
                 <h4 className="text-[15px] font-bold text-gray-900">Septic / On-Site Sewer Facility</h4>
-                <p className="text-[12px] text-gray-500 italic">If yes, please attach TXR-1407 to this disclosure.</p>
+                <p className="text-[12px] text-gray-500 italic">(if yes, attach TXR-1407)</p>
               </div>
               <div className="flex gap-2 p-1 bg-gray-100 rounded-xl border border-gray-200 w-fit shrink-0">
-                {['Yes', 'No'].map((opt) => (
+                {['Y', 'N'].map((opt) => (
                   <label key={opt} className="cursor-pointer">
-                    <input type="radio" name="septic- sewer" className="sr-only peer" />
-                    <div className="px-8 py-3 rounded-lg text-[13px] font-bold text-gray-400 peer-checked:bg-white peer-checked:text-blue-600 peer-checked:shadow-md transition-all">
+                    <input type="radio" name="septic-sewer" className="sr-only peer" />
+                    <div className="px-8 py-3 rounded-lg text-[13px] font-bold text-gray-400 peer-checked:bg-white peer-checked:text-indigo-600 peer-checked:shadow-md transition-all">
                       {opt}
                     </div>
                   </label>
@@ -733,7 +701,7 @@ function renderStepContent(stepIdx: number, subStepIdx: number, { inspectionRepo
                 <p className="text-[12px] text-gray-500">Lead-based paint disclosures may be required for older properties.</p>
               </div>
               <div className="flex gap-2 p-1 bg-gray-100 rounded-xl border border-gray-200 w-fit shrink-0">
-                {['Yes', 'No', 'Unknown'].map((opt) => (
+                {['Y', 'N', 'U'].map((opt) => (
                   <label key={opt} className="cursor-pointer">
                     <input type="radio" name="lead-paint-check" className="sr-only peer" />
                     <div className="px-6 py-3 rounded-lg text-[13px] font-bold text-gray-400 peer-checked:bg-white peer-checked:text-blue-600 peer-checked:shadow-md transition-all">
@@ -765,7 +733,7 @@ function renderStepContent(stepIdx: number, subStepIdx: number, { inspectionRepo
                 />
               </div>
               <div className="space-y-3">
-                <label className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Approximate Age</label>
+                <label className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Age (approximate)</label>
                 <input 
                   type="text" 
                   placeholder="e.g. 10 years"
@@ -775,9 +743,9 @@ function renderStepContent(stepIdx: number, subStepIdx: number, { inspectionRepo
             </div>
 
             <div className="pt-4 border-t border-white/10">
-              <label className="text-[14px] font-semibold mb-4 block">Is there an overlay roof covering on the Property?</label>
+              <label className="text-[14px] font-semibold mb-4 block">Is there an overlay roof covering on the Property (shingles or roof covering placed over existing shingles or roof covering)?</label>
               <div className="flex gap-2 p-1 bg-white/5 rounded-2xl border border-white/10 w-full md:w-fit">
-                {['Yes', 'No', 'Unknown'].map((opt) => (
+                {['Y', 'N', 'U'].map((opt) => (
                   <label key={opt} className="flex-1 md:flex-none cursor-pointer">
                     <input type="radio" name="overlay-roof" className="sr-only peer" />
                     <div className="px-8 py-3 rounded-xl text-[13px] font-bold text-gray-500 peer-checked:bg-blue-600 peer-checked:text-white peer-checked:shadow-[0_0_20px_rgba(37,99,235,0.4)] transition-all text-center">
@@ -789,7 +757,7 @@ function renderStepContent(stepIdx: number, subStepIdx: number, { inspectionRepo
             </div>
           </div>
 
-          {/* Section 1 Warning Awarenes */}
+          {/* Section 1 Awareness Statement */}
           <div className="p-8 bg-amber-50 rounded-3xl border-2 border-amber-100 flex flex-col md:flex-row gap-6 items-start">
             <div className="w-14 h-14 bg-amber-100 rounded-2xl flex items-center justify-center shrink-0">
               <AlertTriangle className="w-7 h-7 text-amber-600" />
@@ -797,10 +765,10 @@ function renderStepContent(stepIdx: number, subStepIdx: number, { inspectionRepo
             <div className="flex-1 space-y-4">
               <div>
                 <h4 className="text-[15px] font-bold text-gray-900">Section 1 Awareness Statement</h4>
-                <p className="text-[13px] text-gray-600 mt-1">Are you (Seller) aware of any of the items listed in this Section 1 that are not in working condition, that have defects, or are in need of repair?</p>
+                <p className="text-[13px] text-gray-600 mt-1">Are you (Seller) aware of any of the items listed in this Section 1 that are not in working condition, that have defects, or are need of repair?</p>
               </div>
               <div className="flex gap-3">
-                {['Yes', 'No'].map((opt) => (
+                {['Y', 'N'].map((opt) => (
                   <label key={opt} className="cursor-pointer group flex-1 md:flex-none">
                     <input type="radio" name="section1-awareness" className="sr-only peer" />
                     <div className="px-10 py-3 bg-white border border-gray-200 rounded-xl text-[14px] font-bold text-gray-400 group-hover:border-amber-400 peer-checked:bg-amber-600 peer-checked:text-white peer-checked:border-amber-600 transition-all text-center shadow-sm">
@@ -1391,24 +1359,24 @@ function renderStepContent(stepIdx: number, subStepIdx: number, { inspectionRepo
         </div>
 
         {/* Section 13: Smoke Detectors */}
-        <div className="p-8 bg-indigo-900 rounded-3xl text-white space-y-6 shadow-xl shadow-indigo-900/20 relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-8 opacity-10">
+        <div className="p-5 md:p-8 bg-indigo-900 rounded-3xl text-white space-y-6 shadow-xl shadow-indigo-900/20 relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-8 opacity-10 hidden md:block">
             <AlertTriangle className="w-32 h-32" />
           </div>
-          <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-8">
+          <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6 md:gap-8">
             <div className="flex items-center gap-4">
-              <span className="w-10 h-10 rounded-xl bg-white/10 text-white flex items-center justify-center text-[14px] font-bold border border-white/20">13</span>
+              <span className="w-10 h-10 rounded-xl bg-white/10 text-white flex items-center justify-center text-[14px] font-bold border border-white/20 shrink-0">13</span>
               <div>
-                <h4 className="text-[16px] font-bold leading-tight">Property has working smoke detectors installed?</h4>
-                <p className="text-[12px] text-indigo-200 mt-1">In accordance with Chapter 766 of the Health and Safety Code</p>
+                <h4 className="text-[15px] md:text-[16px] font-bold leading-tight">Property has working smoke detectors installed?</h4>
+                <p className="text-[11px] md:text-[12px] text-indigo-200 mt-1">In accordance with Chapter 766 of the Health and Safety Code</p>
               </div>
             </div>
-            <div className="flex gap-2 p-1 bg-white/5 rounded-2xl border border-white/10 w-fit shrink-0 backdrop-blur-sm">
+            <div className="flex gap-1.5 p-1 bg-white/5 rounded-2xl border border-white/10 w-full sm:w-fit shrink-0 backdrop-blur-sm">
               {['Yes', 'No', 'Unknown'].map(opt => (
-                <label key={opt} className="cursor-pointer">
+                <label key={opt} className="flex-1 sm:flex-none cursor-pointer">
                   <input type="radio" name="smoke-detectors" className="sr-only peer" />
-                  <div className="px-8 py-3 rounded-xl text-[12px] font-bold text-indigo-300 peer-checked:bg-white peer-checked:text-indigo-900 peer-checked:shadow-lg transition-all uppercase tracking-wide">
-                    {opt}
+                  <div className="px-3 md:px-8 py-2 md:py-3 rounded-xl text-[11px] md:text-[12px] font-black text-indigo-300 peer-checked:bg-white peer-checked:text-indigo-900 peer-checked:shadow-lg transition-all uppercase tracking-wide text-center">
+                    {opt === 'Unknown' ? 'U' : opt}
                   </div>
                 </label>
               ))}
@@ -1525,17 +1493,22 @@ function renderStepContent(stepIdx: number, subStepIdx: number, { inspectionRepo
         </div>
 
         {/* Final Submission Card */}
-        <div className="p-8 bg-gradient-to-br from-indigo-600 to-indigo-700 rounded-3xl text-white text-center shadow-2xl shadow-indigo-200">
-          <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-6 backdrop-blur-md">
-            <CheckCircle2 className="w-8 h-8 text-white" />
+        <div className="p-6 md:p-12 bg-gradient-to-br from-indigo-600 to-indigo-700 rounded-3xl text-white text-center shadow-2xl shadow-indigo-200 relative overflow-hidden">
+          <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/5 rounded-full blur-3xl" />
+          <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-white/5 rounded-full blur-3xl" />
+          
+          <div className="relative z-10 max-w-lg mx-auto">
+            <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-6 backdrop-blur-md border border-white/20">
+              <CheckCircle2 className="w-8 h-8 text-white" />
+            </div>
+            <h3 className="text-xl md:text-2xl font-black mb-3">Ready to Finalize?</h3>
+            <p className="text-indigo-100 text-[14px] md:text-[15px] font-medium mb-8 leading-relaxed">
+              All sections have been completed. Once submitted, this disclosure will be legally binding and sent for verification.
+            </p>
+            <button className="w-full sm:w-auto px-12 py-4 bg-white text-indigo-600 rounded-2xl text-[15px] font-black hover:bg-gray-50 transition-all shadow-xl active:scale-95 uppercase tracking-widest">
+              Submit Disclosure
+            </button>
           </div>
-          <h3 className="text-xl font-bold mb-2">Ready to Finalize?</h3>
-          <p className="text-indigo-100 text-[14px] max-w-md mx-auto mb-8">
-            All sections have been completed. Once submitted, this disclosure will be sent for review and verification.
-          </p>
-          <button className="px-12 py-4 bg-white text-indigo-600 rounded-2xl text-[15px] font-bold hover:bg-gray-50 transition-all shadow-lg active:scale-95">
-            Submit Disclosure
-          </button>
         </div>
       </div>
     );

@@ -23,6 +23,12 @@ import { motion, AnimatePresence } from 'motion/react';
 export function Sidebar({ activePage, setActivePage }: { activePage: string, setActivePage: (page: string) => void }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
+  React.useEffect(() => {
+    if (activePage === 'seller-disclosure') {
+      setIsCollapsed(true);
+    }
+  }, [activePage]);
+
   return (
     <motion.div 
       initial={false}
