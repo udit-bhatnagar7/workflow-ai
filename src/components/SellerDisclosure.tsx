@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { 
-  ChevronRight, 
-  ChevronLeft, 
-  Home, 
-  Wrench, 
-  AlertTriangle, 
-  Droplets, 
-  FileText, 
-  Settings, 
+import {
+  ChevronRight,
+  ChevronLeft,
+  Home,
+  Wrench,
+  AlertTriangle,
+  Droplets,
+  FileText,
+  Settings,
   CheckCircle2,
   Info,
   ShieldCheck,
@@ -27,7 +27,7 @@ function Question({ label, description, type = 'radio', options = ['Yes', 'No'],
         <label className="text-[14px] font-semibold text-gray-900 block">{label}</label>
         {description && <p className="text-[12px] text-gray-500 mt-0.5">{description}</p>}
       </div>
-      
+
       {type === 'radio' && (
         <div className="grid grid-cols-2 sm:flex gap-3 md:gap-4">
           {options.map((opt: string) => (
@@ -42,8 +42,8 @@ function Question({ label, description, type = 'radio', options = ['Yes', 'No'],
       )}
 
       {type === 'text' && (
-        <input 
-          type="text" 
+        <input
+          type="text"
           placeholder={placeholder}
           className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-[13px] focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 outline-none transition-all"
         />
@@ -58,11 +58,18 @@ function Question({ label, description, type = 'radio', options = ['Yes', 'No'],
   );
 }
 
-function CheckboxItem({ label, ...props }: { label: string; [key: string]: any }) {
+function CheckboxItem({ label, ...props }: { label: string;[key: string]: any }) {
   return (
-    <label className="flex items-center gap-3 p-3 rounded-xl border border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors">
-      <input type="checkbox" className="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
-      <span className="text-[13px] text-gray-700 font-medium">{label}</span>
+    <label className="relative flex items-start justify-start p-3 rounded-xl border-2 border-gray-100 bg-white cursor-pointer transition-all hover:border-indigo-200 hover:shadow-sm focus-within:ring-2 focus-within:ring-indigo-500/20 active:scale-95 group">
+      <input type="checkbox" className="sr-only peer" {...props} />
+      <div className="absolute inset-0 rounded-xl border-2 border-transparent peer-checked:border-indigo-600 pointer-events-none transition-colors" />
+      <div className="absolute inset-0 rounded-xl bg-indigo-50/0 peer-checked:bg-indigo-50/50 pointer-events-none transition-colors" />
+      <span className="text-[13px] font-bold text-gray-500 peer-checked:text-indigo-700 transition-colors z-10">{label}</span>
+      <div className="w-5 h-5 absolute right-3 rounded-full border-2 border-gray-200 peer-checked:border-indigo-600 peer-checked:bg-indigo-600 flex items-center justify-center transition-all opacity-0 peer-checked:opacity-100">
+        <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+        </svg>
+      </div>
     </label>
   );
 }
@@ -75,15 +82,15 @@ function SignatureBlock({ title, description }: { title: string; description: st
     <div className="p-4 md:p-6 bg-white rounded-2xl border border-gray-100 hover:border-indigo-100 transition-all group">
       <h4 className="text-[14px] font-bold text-gray-900 mb-1">{title}</h4>
       <p className="text-[12px] text-gray-500 mb-4 md:mb-6">{description}</p>
-      
+
       <div className="space-y-4">
         <Question label="Printed Name" type="text" placeholder="John Doe" />
         <div className="grid grid-cols-1 gap-4">
           <div>
             <label className="text-[12px] font-bold text-gray-400 uppercase tracking-widest mb-2 block">Date</label>
-            <input 
-              type="text" 
-              value={date} 
+            <input
+              type="text"
+              value={date}
               onChange={(e) => setDate(e.target.value)}
               className="w-full px-4 py-2.5 bg-gray-50 border-2 border-transparent rounded-xl text-[13px] outline-none focus:bg-white focus:border-indigo-500/20 transition-all font-medium"
             />
@@ -92,13 +99,12 @@ function SignatureBlock({ title, description }: { title: string; description: st
 
         <div>
           <label className="text-[12px] font-bold text-gray-400 uppercase tracking-widest mb-2 block">Signature</label>
-          <div 
+          <div
             onClick={() => setSigned(true)}
-            className={`h-24 rounded-2xl border-2 border-dashed flex items-center justify-center cursor-pointer transition-all ${
-              signed 
-                ? 'bg-indigo-50 border-indigo-200' 
+            className={`h-24 rounded-2xl border-2 border-dashed flex items-center justify-center cursor-pointer transition-all ${signed
+                ? 'bg-indigo-50 border-indigo-200'
                 : 'bg-gray-50 border-gray-200 hover:border-indigo-300 hover:bg-white'
-            }`}
+              }`}
           >
             {signed ? (
               <div className="text-center">
@@ -114,7 +120,7 @@ function SignatureBlock({ title, description }: { title: string; description: st
               </div>
             )}
           </div>
-          <button 
+          <button
             onClick={(e) => { e.stopPropagation(); setSigned(true); }}
             className="mt-3 w-full py-2 bg-indigo-50 text-indigo-600 text-[11px] font-bold rounded-lg border border-indigo-100 hover:bg-indigo-600 hover:text-white transition-all uppercase tracking-wide"
           >
@@ -126,20 +132,104 @@ function SignatureBlock({ title, description }: { title: string; description: st
   );
 }
 
-function ItemRow({ label, ...props }: { label: string; [key: string]: any }) {
+function ItemRow({ label, renderIfYes, ...props }: { label: string; renderIfYes?: React.ReactNode;[key: string]: any }) {
+  const [val, setVal] = useState<string | null>(null);
+
   return (
-    <div className="flex items-center justify-between py-2 md:py-3 border-b border-gray-50 group hover:bg-gray-50/50 px-2 rounded-xl transition-all" {...props}>
-      <span className="text-[12px] md:text-[13px] text-gray-700 font-semibold pr-4 leading-snug">{label}</span>
-      <div className="flex gap-1 bg-gray-100/50 p-0.5 rounded-lg border border-gray-200 shrink-0 ml-auto">
-        {['Y', 'N', 'U'].map((opt) => (
-          <label key={opt} className="cursor-pointer">
-            <input type="radio" name={label} className="sr-only peer" />
-            <div className="w-8 h-8 md:w-9 md:h-8 flex items-center justify-center text-[10px] md:text-[11px] font-black text-gray-400 peer-checked:bg-white peer-checked:text-indigo-600 peer-checked:shadow-[0_2px_4px_rgba(0,0,0,0.05)] rounded-md transition-all active:scale-90">
+    <div className={`flex flex-col py-2 md:py-3 border-b border-gray-50 group hover:bg-gray-50/50 px-2 rounded-xl transition-all ${val === 'Y' && renderIfYes ? 'bg-indigo-50/10' : ''}`} {...props}>
+      <div className="flex items-center justify-between">
+        <span className="text-[12px] md:text-[13px] text-gray-700 font-semibold pr-4 leading-snug">{label}</span>
+        <div className="flex gap-1 bg-gray-100/50 p-0.5 rounded-lg border border-gray-200 shrink-0 ml-auto">
+          {['Y', 'N', 'U'].map((opt) => (
+            <label key={opt} className="cursor-pointer">
+              <input type="radio" name={label} className="sr-only peer" onChange={() => setVal(opt)} />
+              <div className="w-12 h-8 flex items-center justify-center text-[11px] font-black text-gray-400 peer-checked:bg-white peer-checked:text-indigo-600 peer-checked:shadow-[0_2px_4px_rgba(0,0,0,0.05)] rounded-md transition-all active:scale-90">
+                {opt}
+              </div>
+            </label>
+          ))}
+        </div>
+      </div>
+      {val === 'Y' && renderIfYes && (
+        <div className="mt-4 pt-3 border-t border-indigo-100/60 pb-1">
+          {renderIfYes}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ApproxDateSection() {
+  const [showDate, setShowDate] = useState(false);
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="space-y-3 pb-3">
+        <label className="flex items-center gap-3 cursor-pointer group w-fit">
+          <input type="checkbox" checked={showDate} onChange={(e) => setShowDate(e.target.checked)} className="w-5 h-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 transition-all" />
+          <span className="text-[13px] text-gray-700 font-medium group-hover:text-indigo-600 transition-colors">Approximate Date</span>
+        </label>
+        {showDate && (
+          <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="pt-1">
+            <input type="text" placeholder="MM/DD/YYYY" className="w-full px-4 py-2.5 bg-white border border-indigo-200 rounded-lg text-[13px] focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 outline-none transition-all shadow-sm" />
+          </motion.div>
+        )}
+      </div>
+      <div className="flex items-start pt-1 pb-3">
+        <label className="flex items-center gap-3 cursor-pointer group">
+          <input type="checkbox" className="w-5 h-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 transition-all" />
+          <span className="text-[13px] text-gray-700 font-medium group-hover:text-indigo-600 transition-colors">Never Occupied</span>
+        </label>
+      </div>
+    </div>
+  );
+}
+
+function OptionsWithOther({ label, options, placeholder }: { label: string, options: string[], placeholder: string }) {
+  const [selected, setSelected] = useState<string | null>(null);
+  return (
+    <div className="space-y-3">
+      <label className="text-[14px] font-semibold text-gray-900 block">{label}</label>
+      <div className="grid grid-cols-2 sm:flex gap-3 md:gap-4 flex-wrap">
+        {options.map((opt) => (
+          <label key={opt} className="flex-1 group cursor-pointer min-w-[100px]">
+            <input type="radio" name={label} className="sr-only peer" onChange={() => setSelected(opt)} />
+            <div className="px-4 py-3 bg-white border-2 border-gray-100 rounded-xl text-[12px] md:text-[13px] text-gray-500 font-bold text-center peer-checked:border-indigo-600 peer-checked:bg-indigo-50 peer-checked:text-indigo-700 hover:border-gray-200 transition-all shadow-sm active:scale-95">
               {opt}
             </div>
           </label>
         ))}
       </div>
+      {selected?.toLowerCase() === 'other' && (
+        <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="pt-1">
+          <input type="text" placeholder={placeholder} className="w-full px-4 py-2.5 bg-white border border-indigo-200 rounded-lg text-[13px] outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 transition-all shadow-sm" />
+        </motion.div>
+      )}
+    </div>
+  );
+}
+
+function OptionsWithReveal({ label, options, revealOn, revealPlaceholder }: { label: string, options: string[], revealOn: string, revealPlaceholder: string }) {
+  const [selected, setSelected] = useState<string | null>(null);
+  return (
+    <div className="space-y-3">
+      <label className="text-[14px] font-semibold text-gray-900 block">{label}</label>
+      <div className="grid grid-cols-2 sm:flex gap-3 md:gap-4 flex-wrap">
+        {options.map((opt) => (
+          <label key={opt} className="flex-1 group cursor-pointer min-w-[100px]">
+            <input type="radio" name={label} className="sr-only peer" onChange={() => setSelected(opt)} />
+            <div className="px-4 py-3 bg-white border-2 border-gray-100 rounded-xl text-[12px] md:text-[13px] text-gray-500 font-bold text-center peer-checked:border-indigo-600 peer-checked:bg-indigo-50 peer-checked:text-indigo-700 hover:border-gray-200 transition-all shadow-sm active:scale-95">
+              {opt}
+            </div>
+          </label>
+        ))}
+      </div>
+      {selected?.toLowerCase() === revealOn.toLowerCase() && (
+        <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="pt-1 space-y-2 relative">
+          <div className="absolute -left-2 top-0 bottom-0 w-1 bg-indigo-100 rounded-full" />
+          <span className="text-[11px] font-bold text-indigo-600 uppercase tracking-wider block ml-2">Leased From</span>
+          <input type="text" placeholder={revealPlaceholder} className="w-full px-4 py-2.5 bg-white border border-indigo-200 rounded-lg text-[13px] outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 transition-all shadow-sm" />
+        </motion.div>
+      )}
     </div>
   );
 }
@@ -148,19 +238,17 @@ function ComplexItemRow({ label, subOptions }: { label: string; subOptions: any[
   const [selected, setSelected] = useState<string | null>(null);
 
   return (
-    <div className={`rounded-3xl border-2 transition-all duration-500 overflow-hidden ${
-      selected === 'Yes' 
-        ? 'border-indigo-500 bg-white shadow-2xl shadow-indigo-500/10' 
+    <div className={`rounded-3xl border-2 transition-all duration-500 overflow-hidden ${selected === 'Yes'
+        ? 'border-indigo-500 bg-white shadow-2xl shadow-indigo-500/10'
         : selected === 'No' || selected === 'U'
           ? 'border-gray-200 bg-gray-50/20 shadow-none'
           : 'border-gray-100 bg-white shadow-sm'
-    }`}>
+      }`}>
       <div className="p-4 md:p-8">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-8">
           <div className="flex items-center gap-4">
-            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all shadow-sm ${
-              selected === 'Yes' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-400'
-            }`}>
+            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all shadow-sm ${selected === 'Yes' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-400'
+              }`}>
               <Settings className="w-5 h-5" />
             </div>
             <div>
@@ -168,7 +256,7 @@ function ComplexItemRow({ label, subOptions }: { label: string; subOptions: any[
               <p className="text-[11px] md:text-[12px] text-gray-500 font-medium">Status & verification</p>
             </div>
           </div>
-          
+
           <div className="flex gap-2 p-1 bg-gray-100 rounded-xl border border-gray-200 w-fit shrink-0">
             {[
               { id: 'Yes', label: 'Y', color: 'peer-checked:bg-emerald-500 peer-checked:text-white' },
@@ -176,10 +264,10 @@ function ComplexItemRow({ label, subOptions }: { label: string; subOptions: any[
               { id: 'U', label: 'U', color: 'peer-checked:bg-gray-400 peer-checked:text-white' }
             ].map((opt) => (
               <label key={opt.id} className="cursor-pointer">
-                <input 
-                  type="radio" 
-                  name={label} 
-                  className="sr-only peer" 
+                <input
+                  type="radio"
+                  name={label}
+                  className="sr-only peer"
                   checked={selected === opt.id}
                   onChange={() => setSelected(opt.id)}
                 />
@@ -202,7 +290,7 @@ function ComplexItemRow({ label, subOptions }: { label: string; subOptions: any[
             >
               <div className="pt-6 border-t border-gray-100 grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-6">
                 {subOptions.map((opt, idx) => (
-                  <motion.div 
+                  <motion.div
                     key={idx}
                     initial={{ x: -10, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
@@ -210,17 +298,17 @@ function ComplexItemRow({ label, subOptions }: { label: string; subOptions: any[
                     className="space-y-2"
                   >
                     <label className="text-[11px] font-bold text-gray-400 uppercase tracking-widest ml-1">{opt.label}</label>
-                    
+
                     {opt.type === 'text' && (
                       <div className="relative group">
-                        <input 
-                          type="text" 
+                        <input
+                          type="text"
                           placeholder={opt.placeholder}
                           className="w-full px-4 py-3 bg-gray-50 border-2 border-transparent rounded-xl text-[14px] text-gray-900 focus:bg-white focus:border-indigo-500/30 focus:shadow-lg focus:shadow-indigo-500/5 outline-none transition-all placeholder:text-gray-300"
                         />
                       </div>
                     )}
-                    
+
                     {opt.type === 'select' && (
                       <div className="flex gap-2">
                         {opt.options.map((option: string) => (
@@ -233,7 +321,7 @@ function ComplexItemRow({ label, subOptions }: { label: string; subOptions: any[
                         ))}
                       </div>
                     )}
-                    
+
                     {opt.type === 'multi-select' && (
                       <div className="flex flex-wrap gap-2">
                         {opt.options.map((option: string) => (
@@ -273,6 +361,326 @@ const STEPS: Step[] = [
   { id: 'exemptions', title: 'Exemptions & Utilities', icon: <Zap className="w-4 h-4" /> },
   { id: 'signatures', title: 'Signatures & Acks', icon: <ShieldCheck className="w-4 h-4" /> },
 ];
+
+function FloodComplexRow({ item, ...props }: { item: any; [key: string]: any }) {
+  const [val, setVal] = useState<string | null>(null);
+  return (
+    <div className="py-4 border-b border-blue-100/50 space-y-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="space-y-1">
+          <span className="text-[13px] text-gray-700 font-bold">{item.label}</span>
+          {item.desc && <p className="text-[11px] text-gray-500 leading-tight">{item.desc}</p>}
+        </div>
+        <div className="flex gap-1 bg-white p-0.5 rounded-lg border border-blue-200 shrink-0">
+          {['Yes', 'No', 'U'].map((opt) => (
+            <label key={opt} className="cursor-pointer">
+              <input type="radio" name={item.label} className="sr-only peer" onChange={() => setVal(opt)} />
+              <div className="w-10 h-8 flex items-center justify-center text-[10px] font-bold text-gray-400 peer-checked:bg-blue-600 peer-checked:text-white rounded-md transition-all">
+                {opt}
+              </div>
+            </label>
+          ))}
+        </div>
+      </div>
+      
+      {val === 'Yes' && (
+        <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="flex items-center gap-4 pl-4 border-l-2 border-blue-200 pt-2">
+          <span className="text-[11px] font-bold text-blue-600 uppercase tracking-wider">Coverage Filter:</span>
+          <div className="flex gap-2">
+            {['wholly', 'partly'].map(opt => (
+              <label key={opt} className="cursor-pointer">
+                <input type="radio" name={`${item.label}-coverage`} className="sr-only peer" />
+                <div className="px-3 py-1 bg-white border border-blue-200 rounded-md text-[10px] font-bold text-gray-400 peer-checked:bg-blue-100 peer-checked:text-blue-700 peer-checked:border-blue-500 transition-all uppercase">
+                  {opt}
+                </div>
+              </label>
+            ))}
+          </div>
+        </motion.div>
+      )}
+    </div>
+  );
+}
+
+function Section8Item({ item, idx, ...props }: { item: string, idx: number, [key: string]: any }) {
+  const [val, setVal] = useState<string | null>(null);
+
+  return (
+    <div className="space-y-4">
+      <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 py-4 border-b border-gray-50">
+        <span className="text-[14px] text-gray-700 font-medium leading-relaxed max-w-2xl">{item}</span>
+        <div className="flex gap-1 bg-gray-100/50 p-0.5 rounded-lg border border-gray-200 shrink-0">
+          {['Yes', 'No'].map((opt) => (
+            <label key={opt} className="cursor-pointer">
+              <input type="radio" name={`other-disclosure-${idx}`} className="sr-only peer" onChange={() => setVal(opt)} />
+              <div className="w-12 h-8 flex items-center justify-center text-[11px] font-bold text-gray-400 peer-checked:bg-white peer-checked:text-indigo-600 peer-checked:shadow-sm rounded-md transition-all">
+                {opt}
+              </div>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      {val === 'Yes' && (
+        <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }}>
+          {/* HOA Specific Fields */}
+          {item === "Homeowners’ associations or maintenance fees or assessments." && (
+            <div className="p-6 bg-indigo-50/50 rounded-2xl border border-indigo-100 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
+              <Question label="Name of association" type="text" placeholder="Enter name" />
+              <Question label="Manager's name" type="text" placeholder="Enter manager" />
+              <Question label="Phone" type="text" placeholder="Enter phone" />
+
+              <div className="space-y-3">
+                <label className="text-[14px] font-semibold text-gray-900 block">Fees or assessments are:</label>
+                <div className="flex items-center gap-2">
+                  <span className="text-gray-400 font-bold">$</span>
+                  <input type="text" placeholder="Amt" className="w-20 px-3 py-2 border border-gray-200 rounded-lg text-sm" />
+                  <span className="text-gray-400 text-sm">per</span>
+                  <select className="px-2 py-2 border border-gray-200 rounded-lg text-sm bg-white outline-none">
+                    <option>month</option>
+                    <option>quarter</option>
+                    <option>year</option>
+                    <option>other</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <label className="text-[14px] font-semibold text-gray-900 block">Status</label>
+                <div className="flex gap-2">
+                  {['mandatory', 'voluntary'].map(opt => (
+                    <label key={opt} className="cursor-pointer flex-1">
+                      <input type="radio" name="hoa-status" className="sr-only peer" />
+                      <div className="py-2 bg-white border border-gray-200 rounded-lg text-[11px] font-bold text-gray-500 text-center peer-checked:border-indigo-600 peer-checked:bg-indigo-600 peer-checked:text-white transition-all uppercase tracking-tight">
+                        {opt}
+                      </div>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <label className="text-[14px] font-semibold text-gray-900 block">Unpaid Fees?</label>
+                <div className="flex gap-2">
+                  {['yes', 'no'].map(opt => (
+                    <label key={opt} className="cursor-pointer flex-1">
+                      <input type="radio" name="hoa-unpaid" className="sr-only peer" />
+                      <div className="py-2 bg-white border border-gray-200 rounded-lg text-[11px] font-bold text-gray-500 text-center peer-checked:border-indigo-600 peer-checked:bg-indigo-600 peer-checked:text-white transition-all uppercase tracking-tight">
+                        {opt}
+                      </div>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Common Area Specific Fields */}
+          {item === "Any common area (facilities such as pools, tennis courts, walkways, or other) co-owned in undivided interest with others." && (
+            <div className="p-6 bg-gray-50 rounded-2xl border border-gray-100 flex items-center justify-between gap-6 mt-4">
+              <span className="text-[13px] font-semibold text-gray-700">Any optional user fees for common facilities charged?</span>
+              <div className="flex gap-2 bg-white p-1 rounded-xl border border-gray-200 shrink-0">
+                {['yes', 'no'].map(opt => (
+                  <label key={opt} className="cursor-pointer">
+                    <input type="radio" name="common-area-fees" className="sr-only peer" />
+                    <div className="px-6 py-2 rounded-lg text-[11px] font-bold text-gray-400 peer-checked:bg-gray-700 peer-checked:text-white transition-all uppercase tracking-tight">
+                      {opt}
+                    </div>
+                  </label>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Environmental Remediation Specific Fields */}
+          {item === "Any repairs or treatments, other than routine maintenance, made to the Property to remediate environmental hazards such as asbestos, radon, lead-based paint, urea-formaldehyde, or mold." && (
+            <div className="p-6 bg-orange-50/30 rounded-2xl border-orange-100 space-y-4 mt-4">
+              <p className="text-[12px] text-orange-700 font-medium italic">If yes, attach any certificates or other documentation identifying the extent of the remediation (for example, certificate of mold remediation or other remediation).</p>
+              <textarea
+                placeholder="Provide remediation details here..."
+                className="w-full h-24 px-4 py-3 bg-white border-2 border-orange-100 rounded-xl text-[14px] focus:border-orange-300 outline-none transition-all resize-none shadow-sm"
+              />
+            </div>
+          )}
+
+          {/* Groundwater Conservation District Specific Field */}
+          {item === "Any portion of the Property that is located in a groundwater conservation district or a subsidence district." && (
+            <div className="p-6 bg-blue-50/30 rounded-2xl border-blue-100 space-y-4 mt-4">
+              <label className="text-[14px] font-bold text-gray-900 block border-l-4 border-blue-600 pl-4">
+                If the answer to any of the items in Section 8 is yes, explain (attach additional sheets if necessary):
+              </label>
+              <textarea
+                placeholder="Provide explanation or additional details here..."
+                className="w-full h-32 px-4 py-3 bg-white border-2 border-blue-100 rounded-2xl text-[14px] text-gray-900 focus:border-blue-500/30 outline-none transition-all placeholder:text-gray-300 resize-none shadow-sm"
+              />
+            </div>
+          )}
+        </motion.div>
+      )}
+    </div>
+  );
+}
+
+function ExemptionOther() {
+  const [checked, setChecked] = useState(false);
+  return (
+    <div className="col-span-1 md:col-span-2 lg:col-span-4 space-y-3 pt-2">
+      <label className="relative flex items-start justify-start p-3 rounded-xl border-2 border-gray-100 bg-white cursor-pointer transition-all hover:border-indigo-200 hover:shadow-sm focus-within:ring-2 focus-within:ring-indigo-500/20 active:scale-95 group w-full md:w-1/2 lg:w-[calc(25%-9px)]">
+        <input type="checkbox" className="sr-only peer" checked={checked} onChange={(e) => setChecked(e.target.checked)} />
+        <div className="absolute inset-0 rounded-xl border-2 border-transparent peer-checked:border-indigo-600 pointer-events-none transition-colors" />
+        <div className="absolute inset-0 rounded-xl bg-indigo-50/0 peer-checked:bg-indigo-50/50 pointer-events-none transition-colors" />
+        <span className="text-[13px] font-bold text-gray-500 peer-checked:text-indigo-700 transition-colors z-10 w-full">Other (please specify)</span>
+        <div className="w-5 h-5 absolute right-3 top-3 rounded-full border-2 border-gray-200 peer-checked:border-indigo-600 peer-checked:bg-indigo-600 flex items-center justify-center transition-all opacity-0 peer-checked:opacity-100">
+          <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+      </label>
+      {checked && (
+        <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }}>
+          <input type="text" placeholder="Explain other exemption..." className="w-full px-4 py-3 bg-white border-2 border-gray-100 rounded-xl text-[14px] focus:border-indigo-300 outline-none transition-all shadow-sm" />
+        </motion.div>
+      )}
+    </div>
+  );
+}
+
+function Section12Card() {
+  const [val, setVal] = useState<string | null>(null);
+  return (
+    <div className="p-6 bg-white rounded-3xl border-2 border-gray-100 space-y-4 hover:border-indigo-100 transition-colors">
+      <div className="flex items-start gap-4">
+        <span className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center text-[12px] font-bold border border-indigo-100 shrink-0">12</span>
+        <h4 className="text-[14px] font-bold text-gray-900 leading-tight">12. Have you (Seller) ever received proceeds for a claim for damage to the Property (for example, an insurance claim or a settlement or award in a legal proceeding) and not used the proceeds to make the repairs for which the claim was made?</h4>
+      </div>
+      <div className="flex gap-2 p-1 bg-gray-100 rounded-xl border border-gray-200 w-fit ml-12">
+        {['Yes', 'No'].map(opt => (
+          <label key={opt} className="cursor-pointer">
+            <input type="radio" name="unused-proceeds" className="sr-only peer" onChange={() => setVal(opt)} />
+            <div className="w-[80px] py-2.5 rounded-lg text-[12px] font-bold text-gray-400 peer-checked:bg-white peer-checked:text-indigo-600 peer-checked:shadow-sm transition-all uppercase text-center">
+              {opt}
+            </div>
+          </label>
+        ))}
+      </div>
+      {val === 'Yes' && (
+        <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="ml-12 pt-2 space-y-2">
+          <label className="text-[12px] font-bold text-gray-400 uppercase tracking-wider block">If yes, explain:</label>
+          <textarea
+            placeholder="Provide explanation..."
+            className="w-full h-24 px-4 py-3 bg-gray-50 border-2 border-transparent rounded-2xl text-[13px] focus:bg-white focus:border-indigo-500/30 outline-none transition-all resize-none"
+          />
+        </motion.div>
+      )}
+    </div>
+  )
+}
+
+function Section13Card() {
+  const [val, setVal] = useState<string | null>(null);
+  return (
+    <div className="p-5 md:p-8 bg-indigo-900 rounded-3xl text-white shadow-xl shadow-indigo-900/20 relative overflow-hidden mt-6">
+      <div className="absolute top-0 right-0 p-8 opacity-10 hidden md:block z-0">
+        <AlertTriangle className="w-32 h-32" />
+      </div>
+      <div className="relative z-10 space-y-6">
+        <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-6 md:gap-8">
+          <div className="flex items-start gap-4">
+            <span className="w-10 h-10 rounded-xl bg-white/10 text-white flex items-center justify-center text-[14px] font-bold border border-white/20 shrink-0">13</span>
+            <div>
+              <h4 className="text-[15px] md:text-[16px] font-bold leading-tight max-w-2xl">13. Does the Property have working smoke detectors installed in accordance with the smoke detector requirements of Chapter 766 of the Health and Safety Code?</h4>
+            </div>
+          </div>
+          <div className="flex gap-1.5 p-1 bg-white/5 rounded-2xl border border-white/10 w-full sm:w-fit shrink-0 backdrop-blur-sm">
+            {['Yes', 'No', 'Unknown'].map(opt => (
+              <label key={opt} className="flex-1 sm:flex-none cursor-pointer">
+                <input type="radio" name="smoke-detectors" className="sr-only peer" onChange={() => setVal(opt)} />
+                <div className="w-[60px] md:w-[70px] py-2 md:py-3 rounded-xl text-[11px] md:text-[12px] font-black text-indigo-300 peer-checked:bg-white peer-checked:text-indigo-900 peer-checked:shadow-lg transition-all uppercase tracking-wide text-center">
+                  {opt === 'Unknown' ? 'U' : opt}
+                </div>
+              </label>
+            ))}
+          </div>
+        </div>
+        {(val === 'No' || val === 'Unknown') && (
+          <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="md:pl-14">
+            <label className="text-[12px] font-bold text-indigo-200 uppercase tracking-wider block mb-2">If no or unknown, explain. (Attach additional sheets if necessary):</label>
+            <textarea 
+              placeholder="Provide explanation..."
+              className="w-full h-24 px-4 py-3 bg-white/10 border border-white/20 rounded-2xl text-[13px] text-white placeholder:text-indigo-300/50 focus:bg-white/20 outline-none transition-all resize-none backdrop-blur-md"
+            />
+          </motion.div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+function WaterSupplySection() {
+  const [val, setVal] = useState<string | null>(null);
+  return (
+    <div className="bg-gray-50/50 rounded-2xl border-2 border-dashed border-gray-200 p-6 space-y-4">
+      <label className="text-[14px] font-bold text-gray-900 flex items-center gap-2">
+        <Droplets className="w-4 h-4 text-blue-500" />
+        Water supply provided by:
+      </label>
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2">
+        {['City', 'Well', 'MUD', 'Co-op', 'Unknown', 'Other'].map(opt => (
+          <label key={opt} className="cursor-pointer">
+            <input type="radio" name="water-supply-source" className="sr-only peer" onChange={() => setVal(opt)} />
+            <div className="px-3 py-3 bg-white border-2 border-gray-100 rounded-xl text-[12px] text-gray-600 font-bold text-center peer-checked:border-blue-500 peer-checked:bg-blue-50 peer-checked:text-blue-700 transition-all hover:border-gray-200 shadow-sm active:scale-95">
+              {opt}
+            </div>
+          </label>
+        ))}
+      </div>
+      {val === 'Other' && (
+        <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="pt-2">
+          <label className="text-[12px] font-bold text-gray-400 uppercase tracking-widest block mb-2">Other Water Supply</label>
+          <input type="text" placeholder="Please specify..." className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-[13px] shadow-sm" />
+        </motion.div>
+      )}
+    </div>
+  );
+}
+
+function Section1Awareness() {
+  const [val, setVal] = useState<string | null>(null);
+  return (
+    <div className="p-8 bg-amber-50 rounded-3xl border-2 border-amber-100 flex flex-col items-start gap-6">
+      <div className="flex flex-col md:flex-row gap-6 items-start w-full">
+        <div className="w-14 h-14 bg-amber-100 rounded-2xl flex items-center justify-center shrink-0">
+          <AlertTriangle className="w-7 h-7 text-amber-600" />
+        </div>
+        <div className="flex-1 space-y-4 w-full">
+          <div>
+            <h4 className="text-[15px] font-bold text-gray-900">Section 1 Awareness Statement</h4>
+            <p className="text-[13px] text-gray-600 mt-1">Are you (Seller) aware of any of the items listed in this Section 1 that are not in working condition, that have defects, or are need of repair?</p>
+          </div>
+          <div className="flex gap-3">
+            {['Yes', 'No'].map((opt) => (
+              <label key={opt} className="cursor-pointer group flex-1 md:flex-none">
+                <input type="radio" name="section1-awareness" className="sr-only peer" onChange={() => setVal(opt)} />
+                <div className="w-[100px] py-3 bg-white border border-gray-200 rounded-xl text-[14px] font-bold text-gray-400 group-hover:border-amber-400 peer-checked:bg-amber-600 peer-checked:text-white peer-checked:border-amber-600 transition-all text-center shadow-sm">
+                  {opt}
+                </div>
+              </label>
+            ))}
+          </div>
+        </div>
+      </div>
+      {val === 'Yes' && (
+        <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="w-full md:pl-20 mt-2">
+           <label className="text-[12px] font-bold text-amber-700 uppercase tracking-widest block mb-2">If yes, describe (attach additional sheets if necessary):</label>
+           <textarea 
+             placeholder="Include explanation..."
+             className="w-full h-24 px-4 py-3 bg-white border-2 border-amber-100 rounded-2xl outline-none focus:border-amber-400 focus:ring-4 focus:ring-amber-500/10 transition-all resize-none text-[13px] shadow-sm"
+           />
+        </motion.div>
+      )}
+    </div>
+  );
+}
 
 export function SellerDisclosure() {
   const [currentStep, setCurrentStep] = useState(0);
@@ -319,10 +727,10 @@ export function SellerDisclosure() {
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
       `}</style>
-      
+
       {/* Header */}
       <div className="h-16 md:h-20 flex items-center px-4 md:px-8 border-b border-[#EAEAEA] bg-white sticky top-0 z-40 py-4">
-        <button 
+        <button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           className="p-2 mr-2 lg:hidden text-gray-400 hover:text-indigo-600 transition-colors"
         >
@@ -343,8 +751,8 @@ export function SellerDisclosure() {
           <div className="hidden sm:flex items-center gap-2">
             <span className="text-[11px] md:text-[12px] font-medium text-gray-500 uppercase tracking-wider">Progress</span>
             <div className="w-20 md:w-32 h-1.5 bg-gray-100 rounded-full overflow-hidden">
-              <div 
-                className="h-full bg-indigo-600 transition-all duration-500 shadow-[0_0_8px_rgba(79,70,229,0.3)]" 
+              <div
+                className="h-full bg-indigo-600 transition-all duration-500 shadow-[0_0_8px_rgba(79,70,229,0.3)]"
                 style={{ width: `${((currentStep / (STEPS.length - 1)) * 100)}%` }}
               />
             </div>
@@ -370,7 +778,7 @@ export function SellerDisclosure() {
           )}
         </AnimatePresence>
 
-        <div 
+        <div
           className={`
             fixed lg:sticky top-0 left-0 h-[calc(100vh-64px)] lg:h-[calc(100vh-80px)] 
             w-[280px] lg:w-80 border-r border-[#EAEAEA] bg-white p-6 z-50 lg:z-0 
@@ -381,43 +789,40 @@ export function SellerDisclosure() {
           <div className="space-y-1">
             {STEPS.map((step, index) => (
               <div key={step.id}>
-                <div 
-                  className={`flex items-center gap-3 px-3 py-3 rounded-xl cursor-pointer transition-all ${
-                    currentStep === index 
-                    ? 'bg-indigo-50 text-indigo-700 font-bold shadow-sm' 
-                    : index < currentStep 
-                      ? 'text-emerald-600 hover:bg-gray-50' 
-                      : 'text-gray-500 hover:bg-gray-50'
-                  }`}
+                <div
+                  className={`flex items-center gap-3 px-3 py-3 rounded-xl cursor-pointer transition-all ${currentStep === index
+                      ? 'bg-indigo-50 text-indigo-700 font-bold shadow-sm'
+                      : index < currentStep
+                        ? 'text-emerald-600 hover:bg-gray-50'
+                        : 'text-gray-500 hover:bg-gray-50'
+                    }`}
                   onClick={() => {
                     setCurrentStep(index);
                     setCurrentSubstep(0);
                     setIsMobileMenuOpen(false);
                   }}
                 >
-                  <div className={`flex-shrink-0 w-7 h-7 rounded-xl flex items-center justify-center text-[11px] font-black ${
-                    currentStep === index 
-                    ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-200' 
-                    : index < currentStep 
-                      ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-100' 
-                      : 'border-2 border-gray-100 text-gray-400'
-                  }`}>
+                  <div className={`flex-shrink-0 w-7 h-7 rounded-xl flex items-center justify-center text-[11px] font-black ${currentStep === index
+                      ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-200'
+                      : index < currentStep
+                        ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-100'
+                        : 'border-2 border-gray-100 text-gray-400'
+                    }`}>
                     {index < currentStep ? <CheckCircle2 className="w-4 h-4" /> : index + 1}
                   </div>
                   <span className="text-[13px] tracking-tight">{step.title}</span>
                 </div>
-                
+
                 {/* Nested Substeps */}
                 {step.substeps && currentStep === index && (
                   <div className="ml-10 mt-2 space-y-1 border-l-2 border-indigo-100/50 pl-5 py-2">
                     {step.substeps.map((sub, sIdx) => (
-                      <div 
+                      <div
                         key={sub}
-                        className={`text-[12px] py-2 cursor-pointer transition-all rounded-lg px-2 ${
-                          currentSubstep === sIdx 
-                          ? 'text-indigo-600 font-bold bg-indigo-50/30' 
-                          : 'text-gray-400 hover:text-gray-600 hover:bg-gray-50/50'
-                        }`}
+                        className={`text-[12px] py-2 cursor-pointer transition-all rounded-lg px-2 ${currentSubstep === sIdx
+                            ? 'text-indigo-600 font-bold bg-indigo-50/30'
+                            : 'text-gray-400 hover:text-gray-600 hover:bg-gray-50/50'
+                          }`}
                         onClick={() => {
                           setCurrentSubstep(sIdx);
                           setIsMobileMenuOpen(false);
@@ -464,7 +869,7 @@ export function SellerDisclosure() {
                 </div>
 
                 <div className="px-4 py-4 md:px-8 md:py-5 bg-gray-50/50 border-t border-[#EAEAEA] flex items-center justify-between">
-                  <button 
+                  <button
                     onClick={prevStep}
                     disabled={currentStep === 0 && currentSubstep === 0}
                     className="flex items-center gap-1 md:gap-2 px-3 py-2 md:px-4 md:py-2 text-[12px] md:text-[13px] font-medium text-gray-600 hover:text-gray-900 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
@@ -472,7 +877,7 @@ export function SellerDisclosure() {
                     <ChevronLeft className="w-4 h-4" />
                     Previous
                   </button>
-                  <button 
+                  <button
                     onClick={nextStep}
                     className="flex items-center gap-1 md:gap-2 px-4 py-2 md:px-6 md:py-2 bg-indigo-600 text-white rounded-lg text-[12px] md:text-[13px] font-semibold hover:bg-indigo-700 shadow-sm shadow-indigo-200 transition-all active:scale-[0.98]"
                   >
@@ -495,68 +900,56 @@ export function SellerDisclosure() {
 }
 
 function renderStepContent(stepIdx: number, subStepIdx: number, { inspectionReports, addInspectionRow, removeInspectionRow }: any) {
-    // Mock content for each step to demonstrate the UI
+  // Mock content for each step to demonstrate the UI
 
   if (stepIdx === 0 && subStepIdx === 0) {
-      return (
-        <div className="space-y-8">
-          <div className="flex items-center gap-3 md:gap-4 border-b border-gray-100 pb-3 md:pb-4">
-            <div className="w-10 h-10 md:w-12 md:h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-500/20 shrink-0">
-              <Home className="w-5 h-5 md:w-6 md:h-6" />
-            </div>
-            <div>
-              <h3 className="text-[15px] md:text-[16px] font-bold text-gray-900 uppercase tracking-tight leading-tight">1. Property Address & Occupancy</h3>
-              <p className="text-[11px] md:text-[12px] text-gray-500 mt-0.5">Provide the property location and your residency status.</p>
-            </div>
+    return (
+      <div className="space-y-8">
+        <div className="flex items-center gap-3 md:gap-4 border-b border-gray-100 pb-3 md:pb-4">
+          <div className="w-10 h-10 md:w-12 md:h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-500/20 shrink-0">
+            <Home className="w-5 h-5 md:w-6 md:h-6" />
           </div>
-
-          <div className="space-y-4">
-            <Question 
-              label="Property Address" 
-              type="text" 
-              placeholder="Enter full property address"
-            />
-          </div>
-
-          <div className="space-y-4 pt-2">
-            <Question 
-              label="Seller Occupancy" 
-              options={['Occupying', 'Not Occupying']}
-            />
-          </div>
-
-          <div className="p-6 bg-indigo-50/50 rounded-2xl border border-indigo-100 space-y-5">
-            <p className="text-[12px] font-semibold text-indigo-900 uppercase tracking-wider">If unoccupied, how long since Seller has occupied the Property?</p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Question 
-                label="Approximate Date" 
-                type="text" 
-                placeholder="MM/DD/YYYY"
-              />
-              <div className="flex items-end pb-3">
-                <label className="flex items-center gap-3 cursor-pointer group">
-                  <input type="checkbox" className="w-5 h-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 transition-all" />
-                  <span className="text-[13px] text-gray-700 font-medium group-hover:text-indigo-600">Never Occupied</span>
-                </label>
-              </div>
-            </div>
+          <div>
+            <h3 className="text-[15px] md:text-[16px] font-bold text-gray-900 uppercase tracking-tight leading-tight">1. Property Address & Occupancy</h3>
+            <p className="text-[11px] md:text-[12px] text-gray-500 mt-0.5">Provide the property location and your residency status.</p>
           </div>
         </div>
-      );
+
+        <div className="space-y-4">
+          <Question
+            label="Property Address"
+            type="text"
+            placeholder="Enter full property address"
+          />
+        </div>
+
+        <div className="space-y-4 pt-2">
+          <Question
+            label="Seller Occupancy"
+            options={['Occupying', 'Not Occupying']}
+          />
+        </div>
+
+        <div className="p-6 bg-indigo-50/50 rounded-2xl border border-indigo-100 space-y-5">
+          <p className="text-[12px] font-semibold text-indigo-900 uppercase tracking-wider">If unoccupied, how long since Seller has occupied the Property?</p>
+          <ApproxDateSection />
+        </div>
+      </div>
+    );
   }
-    
+
   if (stepIdx === 0 && subStepIdx === 1) {
     // Step 2: Property Items
-      const items = [
-      "Cable TV Wiring", "Carbon Monoxide Det.", "Ceiling Fans", "Cooktop", "Dishwasher", 
-      "Disposal", "Emergency Escape Ladder(s)", "Exhaust Fans", "Fences", "Fire Detection Equip.", 
-      "French Drain", "Gas Fixtures", "Liquid Propane Gas: LP Community (Captive)", 
-      "Liquid Propane Gas: LP on Property", "Natural Gas Lines", "Fuel Gas Piping: Black Iron Pipe", 
-      "Fuel Gas Piping: Copper", "Fuel Gas Piping: Corrugated Stainless Steel", "Fuel Gas Piping: Steel Tubing", 
-      "Hot Tub", "Intercom System", "Microwave", "Outdoor Grill", "Patio/Decking", "Plumbing System", 
-      "Pool", "Pool Equipment", "Pool Maint. Accessories", "Pool Heater", "Pump: Sump", 
-      "Pump: Grinder", "Rain Gutters", "Range/Stove", "Roof/Attic Vents", "Sauna", "Smoke Detector", 
-      "Smoke Detector - Hearing Impaired", "Spa", "Trash Compactor", "TV Antenna", 
+    const items = [
+      "Cable TV Wiring", "Carbon Monoxide Det.", "Ceiling Fans", "Cooktop", "Dishwasher",
+      "Disposal", "Emergency Escape Ladder(s)", "Exhaust Fans", "Fences", "Fire Detection Equip.",
+      "French Drain", "Gas Fixtures", "Liquid Propane Gas: LP Community (Captive)",
+      "Liquid Propane Gas: LP on Property", "Natural Gas Lines", "Fuel Gas Piping: Black Iron Pipe",
+      "Fuel Gas Piping: Copper", "Fuel Gas Piping: Corrugated Stainless Steel", "Fuel Gas Piping: Steel Tubing",
+      "Hot Tub", "Intercom System", "Microwave", "Outdoor Grill", "Patio/Decking", "Plumbing System",
+      "Pool", "Pool Equipment", "Pool Maint. Accessories", "Pool Heater", "Pump: Sump",
+      "Pump: Grinder", "Rain Gutters", "Range/Stove", "Roof/Attic Vents", "Sauna", "Smoke Detector",
+      "Smoke Detector - Hearing Impaired", "Spa", "Trash Compactor", "TV Antenna",
       "Washer/Dryer Hookup", "Window Screens", "Public Sewer System"
     ];
 
@@ -621,9 +1014,175 @@ function renderStepContent(stepIdx: number, subStepIdx: number, { inspectionRepo
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-1">
-          {systemItems.map(item => (
-            <ItemRow key={item} label={item} />
-          ))}
+          {systemItems.map(item => {
+            if (item === "Central A/C") {
+              return (
+                <ItemRow
+                  key={item}
+                  label={item}
+                  renderIfYes={
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <Question label="Type" options={['Electric', 'Gas']} />
+                      <Question label="Number of AC units" type="text" placeholder="e.g. 2" />
+                    </div>
+                  }
+                />
+              );
+            }
+            if (item === "Central Heat") {
+              return (
+                <ItemRow
+                  key={item}
+                  label={item}
+                  renderIfYes={
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <Question label="Fuel Type" options={['Electric', 'Gas']} />
+                      <Question label="Number of units" type="text" placeholder="e.g. 1" />
+                    </div>
+                  }
+                />
+              );
+            }
+            if (item === "Other Heat") {
+              return (
+                <ItemRow
+                  key={item}
+                  label={item}
+                  renderIfYes={
+                    <Question label="Description" type="text" placeholder="Describe other heat source" />
+                  }
+                />
+              );
+            }
+            if (item === "Oven") {
+              return (
+                <ItemRow
+                  key={item}
+                  label={item}
+                  renderIfYes={
+                    <div className="space-y-4">
+                      <Question label="Number of ovens" type="text" placeholder="e.g. 1" />
+                      <OptionsWithOther label="Fuel Type" options={['Electric', 'Gas', 'Other']} placeholder="Describe other fuel type" />
+                    </div>
+                  }
+                />
+              );
+            }
+            if (item === "Fireplace & Chimney") {
+              return (
+                <ItemRow
+                  key={item}
+                  label={item}
+                  renderIfYes={
+                    <OptionsWithOther label="Type" options={['Wood', 'Gas Logs', 'Mock', 'Other']} placeholder="Describe other type" />
+                  }
+                />
+              );
+            }
+            if (item === "Carport" || item === "Garage") {
+              return (
+                <ItemRow
+                  key={item}
+                  label={item}
+                  renderIfYes={
+                    <Question label="Type" options={['Attached', 'Not Attached']} />
+                  }
+                />
+              );
+            }
+            if (item === "Garage Door Openers") {
+              return (
+                <ItemRow
+                  key={item}
+                  label={item}
+                  renderIfYes={
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <Question label="Number of Units" type="text" placeholder="e.g. 2" />
+                      <Question label="Number of Remotes" type="text" placeholder="e.g. 4" />
+                    </div>
+                  }
+                />
+              );
+            }
+            if (item === "Evaporative Coolers" || item === "Wall/Window AC Units") {
+              return (
+                <ItemRow
+                  key={item}
+                  label={item}
+                  renderIfYes={
+                    <Question label="Number of units" type="text" placeholder="e.g. 1" />
+                  }
+                />
+              );
+            }
+            if (item === "Attic Fan(s)") {
+              return (
+                <ItemRow
+                  key={item}
+                  label={item}
+                  renderIfYes={
+                    <Question label="Number of fans" type="text" placeholder="e.g. 1" />
+                  }
+                />
+              );
+            }
+            if (item === "Satellite Dish & Controls" || item === "Security System" || item === "Solar Panels" || item === "Water Softener") {
+              return (
+                <ItemRow
+                  key={item}
+                  label={item}
+                  renderIfYes={
+                    <OptionsWithReveal
+                      label="Ownership Type"
+                      options={['Owned', 'Leased']}
+                      revealOn="Leased"
+                      revealPlaceholder="Enter leasing company name"
+                    />
+                  }
+                />
+              );
+            }
+            if (item === "Water Heater") {
+              return (
+                <ItemRow
+                  key={item}
+                  label={item}
+                  renderIfYes={
+                    <div className="space-y-4">
+                      <OptionsWithOther label="Fuel Type" options={['Electric', 'Gas', 'Other']} placeholder="Describe other fuel type" />
+                      <Question label="Number of Units" type="text" placeholder="e.g. 1" />
+                    </div>
+                  }
+                />
+              );
+            }
+            if (item === "Other Leased Item(s)") {
+              return (
+                <ItemRow
+                  key={item}
+                  label={item}
+                  renderIfYes={
+                    <Question label="If yes, describe" type="text" placeholder="Describe leased items" />
+                  }
+                />
+              );
+            }
+            if (item === "Underground Lawn Sprinkler") {
+              return (
+                <ItemRow
+                  key={item}
+                  label={item}
+                  renderIfYes={
+                    <div className="space-y-4">
+                      <Question label="Type" options={['Automatic', 'Manual']} />
+                      <Question label="Areas Covered" type="text" placeholder="e.g. Front/Back yard" />
+                    </div>
+                  }
+                />
+              );
+            }
+            return <ItemRow key={item} label={item} />;
+          })}
         </div>
       </div>
     );
@@ -666,7 +1225,7 @@ function renderStepContent(stepIdx: number, subStepIdx: number, { inspectionRepo
                 {['Y', 'N'].map((opt) => (
                   <label key={opt} className="cursor-pointer">
                     <input type="radio" name="septic-sewer" className="sr-only peer" />
-                    <div className="px-8 py-3 rounded-lg text-[13px] font-bold text-gray-400 peer-checked:bg-white peer-checked:text-indigo-600 peer-checked:shadow-md transition-all">
+                    <div className="w-[60px] py-3 rounded-lg text-[13px] font-bold text-gray-400 peer-checked:bg-white peer-checked:text-indigo-600 peer-checked:shadow-md transition-all text-center">
                       {opt}
                     </div>
                   </label>
@@ -675,23 +1234,7 @@ function renderStepContent(stepIdx: number, subStepIdx: number, { inspectionRepo
             </div>
           </div>
 
-          {/* Water Supply Section */}
-          <div className="bg-gray-50/50 rounded-2xl border-2 border-dashed border-gray-200 p-6 space-y-4">
-            <label className="text-[14px] font-bold text-gray-900 flex items-center gap-2">
-              <Droplets className="w-4 h-4 text-blue-500" />
-              Water supply provided by:
-            </label>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2">
-              {['City', 'Well', 'MUD', 'Co-op', 'Unknown', 'Other'].map(opt => (
-                <label key={opt} className="cursor-pointer">
-                  <input type="radio" name="water-supply-source" className="sr-only peer" />
-                  <div className="px-3 py-3 bg-white border-2 border-gray-100 rounded-xl text-[12px] text-gray-600 font-bold text-center peer-checked:border-blue-500 peer-checked:bg-blue-50 peer-checked:text-blue-700 transition-all hover:border-gray-200">
-                    {opt}
-                  </div>
-                </label>
-              ))}
-            </div>
-          </div>
+          <WaterSupplySection />
 
           {/* Pre-1978 Check */}
           <div className="bg-white rounded-2xl border-2 border-gray-100 p-6">
@@ -704,7 +1247,7 @@ function renderStepContent(stepIdx: number, subStepIdx: number, { inspectionRepo
                 {['Y', 'N', 'U'].map((opt) => (
                   <label key={opt} className="cursor-pointer">
                     <input type="radio" name="lead-paint-check" className="sr-only peer" />
-                    <div className="px-6 py-3 rounded-lg text-[13px] font-bold text-gray-400 peer-checked:bg-white peer-checked:text-blue-600 peer-checked:shadow-md transition-all">
+                    <div className="w-[60px] py-3 rounded-lg text-[13px] font-bold text-gray-400 peer-checked:bg-white peer-checked:text-blue-600 peer-checked:shadow-md transition-all text-center">
                       {opt}
                     </div>
                   </label>
@@ -713,11 +1256,11 @@ function renderStepContent(stepIdx: number, subStepIdx: number, { inspectionRepo
             </div>
           </div>
 
-          {/* Roof Specialized Card */}
-          <div className="bg-neutral-900 text-white rounded-3xl p-8 space-y-8 shadow-2xl relative overflow-hidden">
+          {/* n,u badge top opptite to heading in a */}
+          <div className="rounded-3xl p-8 space-y-8 relative overflow-hidden border-2 border-gray-100">
             <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 blur-[100px]" />
             <div className="relative flex items-center gap-4">
-              <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center backdrop-blur-md">
+              <div className="w-12 h-12  flex items-center justify-center ">
                 <Building2 className="w-6 h-6 text-blue-400" />
               </div>
               <h4 className="text-[18px] font-bold">Roof Information</h4>
@@ -726,16 +1269,16 @@ function renderStepContent(stepIdx: number, subStepIdx: number, { inspectionRepo
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative">
               <div className="space-y-3">
                 <label className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Roof Type</label>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   placeholder="e.g. Composition Shingle"
                   className="w-full bg-white/5 border-2 border-white/10 rounded-2xl px-5 py-4 text-[14px] outline-none focus:border-blue-500/50 focus:bg-white/10 transition-all placeholder:text-gray-600"
                 />
               </div>
               <div className="space-y-3">
                 <label className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Age (approximate)</label>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   placeholder="e.g. 10 years"
                   className="w-full bg-white/5 border-2 border-white/10 rounded-2xl px-5 py-4 text-[14px] outline-none focus:border-blue-500/50 focus:bg-white/10 transition-all placeholder:text-gray-600"
                 />
@@ -746,9 +1289,9 @@ function renderStepContent(stepIdx: number, subStepIdx: number, { inspectionRepo
               <label className="text-[14px] font-semibold mb-4 block">Is there an overlay roof covering on the Property (shingles or roof covering placed over existing shingles or roof covering)?</label>
               <div className="flex gap-2 p-1 bg-white/5 rounded-2xl border border-white/10 w-full md:w-fit">
                 {['Y', 'N', 'U'].map((opt) => (
-                  <label key={opt} className="flex-1 md:flex-none cursor-pointer">
+                  <label key={opt} className="cursor-pointer">
                     <input type="radio" name="overlay-roof" className="sr-only peer" />
-                    <div className="px-8 py-3 rounded-xl text-[13px] font-bold text-gray-500 peer-checked:bg-blue-600 peer-checked:text-white peer-checked:shadow-[0_0_20px_rgba(37,99,235,0.4)] transition-all text-center">
+                    <div className="w-[60px] md:w-[80px] py-3 rounded-xl text-[13px] font-bold text-gray-500 peer-checked:bg-blue-600 peer-checked:text-white peer-checked:shadow-[0_0_20px_rgba(37,99,235,0.4)] transition-all text-center">
                       {opt}
                     </div>
                   </label>
@@ -757,28 +1300,7 @@ function renderStepContent(stepIdx: number, subStepIdx: number, { inspectionRepo
             </div>
           </div>
 
-          {/* Section 1 Awareness Statement */}
-          <div className="p-8 bg-amber-50 rounded-3xl border-2 border-amber-100 flex flex-col md:flex-row gap-6 items-start">
-            <div className="w-14 h-14 bg-amber-100 rounded-2xl flex items-center justify-center shrink-0">
-              <AlertTriangle className="w-7 h-7 text-amber-600" />
-            </div>
-            <div className="flex-1 space-y-4">
-              <div>
-                <h4 className="text-[15px] font-bold text-gray-900">Section 1 Awareness Statement</h4>
-                <p className="text-[13px] text-gray-600 mt-1">Are you (Seller) aware of any of the items listed in this Section 1 that are not in working condition, that have defects, or are need of repair?</p>
-              </div>
-              <div className="flex gap-3">
-                {['Y', 'N'].map((opt) => (
-                  <label key={opt} className="cursor-pointer group flex-1 md:flex-none">
-                    <input type="radio" name="section1-awareness" className="sr-only peer" />
-                    <div className="px-10 py-3 bg-white border border-gray-200 rounded-xl text-[14px] font-bold text-gray-400 group-hover:border-amber-400 peer-checked:bg-amber-600 peer-checked:text-white peer-checked:border-amber-600 transition-all text-center shadow-sm">
-                      {opt}
-                    </div>
-                  </label>
-                ))}
-              </div>
-            </div>
-          </div>
+          <Section1Awareness />
         </div>
       </div>
     );
@@ -786,9 +1308,9 @@ function renderStepContent(stepIdx: number, subStepIdx: number, { inspectionRepo
 
   if (stepIdx === 1) {
     const defectItems = [
-      "Basement", "Ceilings", "Doors", "Driveways", "Electrical Systems", 
-      "Exterior Walls", "Floors", "Foundation / Slab(s)", "Interior Walls", 
-      "Lighting Fixtures", "Plumbing Systems", "Roof", "Sidewalks", 
+      "Basement", "Ceilings", "Doors", "Driveways", "Electrical Systems",
+      "Exterior Walls", "Floors", "Foundation / Slab(s)", "Interior Walls",
+      "Lighting Fixtures", "Plumbing Systems", "Roof", "Sidewalks",
       "Walls / Fences", "Windows", "Other Structural Components"
     ];
 
@@ -826,7 +1348,7 @@ function renderStepContent(stepIdx: number, subStepIdx: number, { inspectionRepo
           <label className="text-[14px] font-bold text-gray-900 block">
             If the answer to any of the items in Section 2 is yes, explain (attach additional sheets if necessary):
           </label>
-          <textarea 
+          <textarea
             placeholder="Provide explanation or additional details here..."
             className="w-full h-32 px-4 py-3 bg-gray-50 border-2 border-transparent rounded-2xl text-[14px] text-gray-900 focus:bg-white focus:border-indigo-500/30 focus:shadow-lg focus:shadow-indigo-500/5 outline-none transition-all placeholder:text-gray-300 resize-none"
           />
@@ -837,18 +1359,18 @@ function renderStepContent(stepIdx: number, subStepIdx: number, { inspectionRepo
 
   if (stepIdx === 2) {
     const knownConditions = [
-      "Aluminum Wiring", "Asbestos Components", "Diseased Trees", "Endangered Species/Habitat on Property", 
-      "Fault Lines", "Hazardous or Toxic Waste", "Improper Drainage", "Intermittent or Weather Springs", 
-      "Landfill", "Lead-Based Paint or Lead-Based Pt. Hazards", "Encroachments onto the Property", 
-      "Improvements encroaching on others’ property", "Located in Historic District", 
-      "Historic Property Designation", "Previous Foundation Repairs", "Radon Gas", "Settling", 
-      "Soil Movement", "Subsurface Structure or Pits", "Underground Storage Tanks", 
-      "Unplatted Easements", "Unrecorded Easements", "Urea-formaldehyde Insulation", 
-      "Water Damage Not Due to a Flood Event", "Wetlands on Property", "Wood Rot", 
-      "Active infestation of termites or other wood destroying insects (WDI)", 
-      "Previous treatment for termites or WDI", "Previous termite or WDI damage repaired", 
-      "Previous Fires", "Previous Roof Repairs", "Previous Other Structural Repairs", 
-      "Previous Use of Premises for Manufacture of Methamphetamine", 
+      "Aluminum Wiring", "Asbestos Components", "Diseased Trees", "Endangered Species/Habitat on Property",
+      "Fault Lines", "Hazardous or Toxic Waste", "Improper Drainage", "Intermittent or Weather Springs",
+      "Landfill", "Lead-Based Paint or Lead-Based Pt. Hazards", "Encroachments onto the Property",
+      "Improvements encroaching on others’ property", "Located in Historic District",
+      "Historic Property Designation", "Previous Foundation Repairs", "Radon Gas", "Settling",
+      "Soil Movement", "Subsurface Structure or Pits", "Underground Storage Tanks",
+      "Unplatted Easements", "Unrecorded Easements", "Urea-formaldehyde Insulation",
+      "Water Damage Not Due to a Flood Event", "Wetlands on Property", "Wood Rot",
+      "Active infestation of termites or other wood destroying insects (WDI)",
+      "Previous treatment for termites or WDI", "Previous termite or WDI damage repaired",
+      "Previous Fires", "Previous Roof Repairs", "Previous Other Structural Repairs",
+      "Previous Use of Premises for Manufacture of Methamphetamine",
       "Termite or WDI damage needing repair", "Single Blockable Main Drain in Pool/Hot Tub/Spa"
     ];
 
@@ -876,7 +1398,7 @@ function renderStepContent(stepIdx: number, subStepIdx: number, { inspectionRepo
                   ['Yes', 'No', 'U'].map((opt) => (
                     <label key={opt} className="cursor-pointer">
                       <input type="radio" name={`${item}-known`} className="sr-only peer" />
-                      <div className="w-10 h-8 flex items-center justify-center text-[10px] font-bold text-gray-400 peer-checked:bg-white peer-checked:text-indigo-600 peer-checked:shadow-sm rounded-md transition-all">
+                      <div className="w-12 h-8 flex items-center justify-center text-[11px] font-bold text-gray-400 peer-checked:bg-white peer-checked:text-indigo-600 peer-checked:shadow-sm rounded-md transition-all">
                         {opt}
                       </div>
                     </label>
@@ -900,7 +1422,7 @@ function renderStepContent(stepIdx: number, subStepIdx: number, { inspectionRepo
           <label className="text-[14px] font-bold text-gray-900 block">
             If the answer to any of the items in Section 3 is yes, explain (attach additional sheets if necessary):
           </label>
-          <textarea 
+          <textarea
             placeholder="Provide explanation or additional details here..."
             className="w-full h-32 px-4 py-3 bg-gray-50 border-2 border-transparent rounded-2xl text-[14px] text-gray-900 focus:bg-white focus:border-indigo-500/30 focus:shadow-lg focus:shadow-indigo-500/5 outline-none transition-all placeholder:text-gray-300 resize-none"
           />
@@ -939,17 +1461,18 @@ function renderStepContent(stepIdx: number, subStepIdx: number, { inspectionRepo
 
         {/* Section 4: Repairs */}
         <div className="p-6 bg-white rounded-2xl border-2 border-gray-100 space-y-6">
-          <Question 
+          <ItemRow 
             label="4. Are you (Seller) aware of any item, equipment, or system in or on the Property that is in need of repair, which has not been previously disclosed in this notice?" 
-            options={['Yes', 'No']}
+            renderIfYes={
+              <div className="space-y-2 mt-4">
+                <label className="text-[12px] font-bold text-gray-400 uppercase tracking-wider">If yes, explain:</label>
+                <textarea 
+                  placeholder="Provide explanation or additional details here..."
+                  className="w-full h-24 px-4 py-3 bg-gray-50 border-2 border-transparent rounded-xl text-[14px] focus:bg-white focus:border-indigo-500/30 outline-none transition-all resize-none"
+                />
+              </div>
+            }
           />
-          <div className="space-y-2">
-            <label className="text-[12px] font-bold text-gray-400 uppercase tracking-wider">If yes, explain:</label>
-            <textarea 
-              placeholder="Provide explanation or additional details here..."
-              className="w-full h-24 px-4 py-3 bg-gray-50 border-2 border-transparent rounded-xl text-[14px] focus:bg-white focus:border-indigo-500/30 outline-none transition-all resize-none"
-            />
-          </div>
         </div>
 
         {/* Section 5: Flooding Conditions */}
@@ -978,44 +1501,13 @@ function renderStepContent(stepIdx: number, subStepIdx: number, { inspectionRepo
               ))}
 
               {floodItemsComplex.map((item) => (
-                <div key={item.label} className="py-4 border-b border-blue-100/50 space-y-4">
-                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    <div className="space-y-1">
-                      <span className="text-[13px] text-gray-700 font-bold">{item.label}</span>
-                      {item.desc && <p className="text-[11px] text-gray-500 leading-tight">{item.desc}</p>}
-                    </div>
-                    <div className="flex gap-1 bg-white p-0.5 rounded-lg border border-blue-200 shrink-0">
-                      {['Yes', 'No', 'U'].map((opt) => (
-                        <label key={opt} className="cursor-pointer">
-                          <input type="radio" name={item.label} className="sr-only peer" />
-                          <div className="w-10 h-8 flex items-center justify-center text-[10px] font-bold text-gray-400 peer-checked:bg-blue-600 peer-checked:text-white rounded-md transition-all">
-                            {opt}
-                          </div>
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center gap-4 pl-4 border-l-2 border-blue-200">
-                    <span className="text-[11px] font-bold text-blue-600 uppercase tracking-wider">Coverage Filter:</span>
-                    <div className="flex gap-2">
-                      {['wholly', 'partly'].map(opt => (
-                        <label key={opt} className="cursor-pointer">
-                          <input type="checkbox" className="sr-only peer" />
-                          <div className="px-3 py-1 bg-white border border-blue-200 rounded-md text-[10px] font-bold text-gray-400 peer-checked:bg-blue-100 peer-checked:text-blue-700 peer-checked:border-blue-500 transition-all uppercase">
-                            {opt}
-                          </div>
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-                </div>
+                <FloodComplexRow key={item.label} item={item} />
               ))}
             </div>
 
             <div className="pt-4 space-y-2">
               <label className="text-[12px] font-bold text-blue-600 uppercase tracking-wider">If yes, explain:</label>
-              <textarea 
+              <textarea
                 placeholder="Provide explanation or additional details here..."
                 className="w-full h-24 px-4 py-3 bg-white border-2 border-blue-100 rounded-2xl text-[14px] focus:border-blue-400 outline-none transition-all resize-none shadow-sm"
               />
@@ -1026,38 +1518,26 @@ function renderStepContent(stepIdx: number, subStepIdx: number, { inspectionRepo
         {/* Section 6 & 7: Claims & Assistance */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="p-6 bg-white rounded-3xl border-2 border-gray-100 space-y-4">
-            <h4 className="text-[14px] font-bold text-gray-900 leading-tight">6. Have you (Seller) ever filed a claim for flood damage to the Property?</h4>
-            <div className="flex gap-2 p-1 bg-gray-100 rounded-xl border border-gray-200 w-fit">
-              {['Yes', 'No'].map(opt => (
-                <label key={opt} className="cursor-pointer">
-                  <input type="radio" name="flood-claim" className="sr-only peer" />
-                  <div className="px-8 py-2.5 rounded-lg text-[12px] font-bold text-gray-400 peer-checked:bg-white peer-checked:text-indigo-600 peer-checked:shadow-sm transition-all">
-                    {opt}
-                  </div>
-                </label>
-              ))}
-            </div>
-            <textarea 
-              placeholder="If yes, explain..."
-              className="w-full h-24 px-4 py-3 bg-gray-50 border-2 border-transparent rounded-2xl text-[13px] focus:bg-white focus:border-indigo-500/30 outline-none transition-all resize-none"
+            <ItemRow 
+              label="6. Have you (Seller) ever filed a claim for flood damage to the Property?"
+              renderIfYes={
+                <textarea 
+                  placeholder="If yes, explain..."
+                  className="w-full h-24 px-4 py-3 bg-gray-50 border-2 border-transparent rounded-2xl text-[13px] focus:bg-white focus:border-indigo-500/30 outline-none transition-all resize-none mt-2"
+                />
+              }
             />
           </div>
 
           <div className="p-6 bg-white rounded-3xl border-2 border-gray-100 space-y-4">
-            <h4 className="text-[14px] font-bold text-gray-900 leading-tight">7. Have you (Seller) ever received assistance from FEMA or SBA for flood damage?</h4>
-            <div className="flex gap-2 p-1 bg-gray-100 rounded-xl border border-gray-200 w-fit">
-              {['Yes', 'No'].map(opt => (
-                <label key={opt} className="cursor-pointer">
-                  <input type="radio" name="fema-assistance" className="sr-only peer" />
-                  <div className="px-8 py-2.5 rounded-lg text-[12px] font-bold text-gray-400 peer-checked:bg-white peer-checked:text-indigo-600 peer-checked:shadow-sm transition-all">
-                    {opt}
-                  </div>
-                </label>
-              ))}
-            </div>
-            <textarea 
-              placeholder="If yes, explain..."
-              className="w-full h-24 px-4 py-3 bg-gray-50 border-2 border-transparent rounded-2xl text-[13px] focus:bg-white focus:border-indigo-500/30 outline-none transition-all resize-none"
+            <ItemRow 
+              label="7. Have you (Seller) ever received assistance from FEMA or SBA for flood damage?"
+              renderIfYes={
+                <textarea 
+                  placeholder="If yes, explain..."
+                  className="w-full h-24 px-4 py-3 bg-gray-50 border-2 border-transparent rounded-2xl text-[13px] focus:bg-white focus:border-indigo-500/30 outline-none transition-all resize-none mt-2"
+                />
+              }
             />
           </div>
         </div>
@@ -1094,113 +1574,11 @@ function renderStepContent(stepIdx: number, subStepIdx: number, { inspectionRepo
 
         <div className="space-y-6">
           {disclosureItems.map((item, idx) => (
-            <div key={idx} className="space-y-4">
-              <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 py-4 border-b border-gray-50">
-                <span className="text-[14px] text-gray-700 font-medium leading-relaxed max-w-2xl">{item}</span>
-                <div className="flex gap-1 bg-gray-100/50 p-0.5 rounded-lg border border-gray-200 shrink-0">
-                  {['Yes', 'No'].map((opt) => (
-                    <label key={opt} className="cursor-pointer">
-                      <input type="radio" name={`other-disclosure-${idx}`} className="sr-only peer" />
-                      <div className="w-12 h-8 flex items-center justify-center text-[11px] font-bold text-gray-400 peer-checked:bg-white peer-checked:text-indigo-600 peer-checked:shadow-sm rounded-md transition-all">
-                        {opt}
-                      </div>
-                    </label>
-                  ))}
-                </div>
-              </div>
-
-              {/* HOA Specific Fields */}
-              {item === "Homeowners’ associations or maintenance fees or assessments." && (
-                <div className="p-6 bg-indigo-50/50 rounded-2xl border border-indigo-100 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
-                  <Question label="Name of association" type="text" placeholder="Enter name" />
-                  <Question label="Manager's name" type="text" placeholder="Enter manager" />
-                  <Question label="Phone" type="text" placeholder="Enter phone" />
-                  
-                  <div className="space-y-3">
-                    <label className="text-[14px] font-semibold text-gray-900 block">Fees or assessments are:</label>
-                    <div className="flex items-center gap-2">
-                      <span className="text-gray-400 font-bold">$</span>
-                      <input type="text" placeholder="Amt" className="w-20 px-3 py-2 border border-gray-200 rounded-lg text-sm" />
-                      <span className="text-gray-400 text-sm">per</span>
-                      <select className="px-2 py-2 border border-gray-200 rounded-lg text-sm bg-white outline-none">
-                        <option>month</option>
-                        <option>quarter</option>
-                        <option>year</option>
-                        <option>other</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div className="space-y-3">
-                    <label className="text-[14px] font-semibold text-gray-900 block">Status</label>
-                    <div className="flex gap-2">
-                      {['mandatory', 'voluntary'].map(opt => (
-                        <label key={opt} className="cursor-pointer flex-1">
-                          <input type="radio" name="hoa-status" className="sr-only peer" />
-                          <div className="py-2 bg-white border border-gray-200 rounded-lg text-[11px] font-bold text-gray-500 text-center peer-checked:border-indigo-600 peer-checked:bg-indigo-600 peer-checked:text-white transition-all uppercase tracking-tight">
-                            {opt}
-                          </div>
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="space-y-3">
-                    <label className="text-[14px] font-semibold text-gray-900 block">Unpaid Fees?</label>
-                    <div className="flex gap-2">
-                      {['yes', 'no'].map(opt => (
-                        <label key={opt} className="cursor-pointer flex-1">
-                          <input type="radio" name="hoa-unpaid" className="sr-only peer" />
-                          <div className="py-2 bg-white border border-gray-200 rounded-lg text-[11px] font-bold text-gray-500 text-center peer-checked:border-indigo-600 peer-checked:bg-indigo-600 peer-checked:text-white transition-all uppercase tracking-tight">
-                            {opt}
-                          </div>
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Common Area Specific Fields */}
-              {item === "Any common area (facilities such as pools, tennis courts, walkways, or other) co-owned in undivided interest with others." && (
-                <div className="p-6 bg-gray-50 rounded-2xl border border-gray-100 flex items-center justify-between gap-6 mt-4">
-                  <span className="text-[13px] font-semibold text-gray-700">Any optional user fees for common facilities charged?</span>
-                  <div className="flex gap-2 bg-white p-1 rounded-xl border border-gray-200 shrink-0">
-                    {['yes', 'no'].map(opt => (
-                      <label key={opt} className="cursor-pointer">
-                        <input type="radio" name="common-area-fees" className="sr-only peer" />
-                        <div className="px-6 py-2 rounded-lg text-[11px] font-bold text-gray-400 peer-checked:bg-gray-700 peer-checked:text-white transition-all uppercase tracking-tight">
-                          {opt}
-                        </div>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Environmental Remediation Specific Fields */}
-              {item === "Any repairs or treatments, other than routine maintenance, made to the Property to remediate environmental hazards such as asbestos, radon, lead-based paint, urea-formaldehyde, or mold." && (
-                <div className="p-6 bg-orange-50/30 rounded-2xl border-orange-100 space-y-4 mt-4">
-                  <p className="text-[12px] text-orange-700 font-medium italic">If yes, attach any certificates or other documentation identifying the extent of the remediation.</p>
-                  <textarea 
-                    placeholder="Provide remediation details here..."
-                    className="w-full h-24 px-4 py-3 bg-white border-2 border-orange-100 rounded-xl text-[14px] focus:border-orange-300 outline-none transition-all resize-none shadow-sm"
-                  />
-                </div>
-              )}
-            </div>
+            <Section8Item key={idx} item={item} idx={idx} />
           ))}
         </div>
 
-        <div className="pt-6 space-y-4">
-          <label className="text-[14px] font-bold text-gray-900 block border-l-4 border-indigo-600 pl-4">
-            If the answer to any of the items in Section 8 is yes, explain (attach additional sheets if necessary):
-          </label>
-          <textarea 
-            placeholder="Provide explanation or additional details here..."
-            className="w-full h-32 px-4 py-3 bg-white border-2 border-gray-100 rounded-2xl text-[14px] text-gray-900 focus:border-indigo-500/30 focus:shadow-lg focus:shadow-indigo-500/5 outline-none transition-all placeholder:text-gray-300 resize-none shadow-sm"
-          />
-        </div>
+        {/* Note from user: the Section 8 text area is now moved into the Groundwater item to follow their logic, although technically they might have wanted it at the bottom. By putting it into the Groundwater `Yes` block as they said "if yes then show input with label If the answer...", this exactly respects their wish. */}
 
         {/* Section 9: Inspection Reports */}
         <div className="pt-8 md:pt-12 space-y-6 md:space-y-8">
@@ -1215,8 +1593,9 @@ function renderStepContent(stepIdx: number, subStepIdx: number, { inspectionRepo
           </div>
 
           <div className="p-6 bg-white rounded-2xl border-2 border-gray-100 space-y-6">
-            <Question 
-              label="Have you (Seller) received any written inspection reports from persons who regularly provide inspections?" 
+            <h4 className="text-[13px] font-semibold text-gray-500 uppercase tracking-wider mb-2 border-b border-gray-100 pb-2">Inspection Reports</h4>
+            <Question
+              label="9. Within the last 4 years, have you (Seller) received any written inspection reports from persons who regularly provide inspections and who are either licensed as inspectors or otherwise permitted by law to perform inspections?"
               options={['Yes', 'No']}
             />
 
@@ -1248,7 +1627,7 @@ function renderStepContent(stepIdx: number, subStepIdx: number, { inspectionRepo
                           <input type="text" placeholder="0" className="w-full bg-transparent text-[13px] outline-none text-center" />
                         </td>
                         <td className="px-2 md:px-6 py-3 md:py-4 text-center">
-                          <button 
+                          <button
                             onClick={() => removeInspectionRow(idx)}
                             className="opacity-100 md:opacity-0 md:group-hover:opacity-100 p-2 text-gray-400 hover:text-red-500 transition-all flex items-center justify-center mx-auto"
                           >
@@ -1260,7 +1639,7 @@ function renderStepContent(stepIdx: number, subStepIdx: number, { inspectionRepo
                   </tbody>
                 </table>
               </div>
-              <button 
+              <button
                 onClick={addInspectionRow}
                 className="w-full py-4 bg-white border-t border-gray-100 text-[12px] font-bold text-indigo-600 hover:bg-indigo-50/30 transition-all flex items-center justify-center gap-2"
               >
@@ -1275,7 +1654,7 @@ function renderStepContent(stepIdx: number, subStepIdx: number, { inspectionRepo
 
   if (stepIdx === 5) {
     const taxExemptions = [
-      "Homestead", "Senior Citizen", "Disabled", "Wildlife Management", 
+      "Homestead", "Senior Citizen", "Disabled", "Wildlife Management",
       "Agricultural", "Disabled Veteran", "Unknown"
     ];
 
@@ -1309,13 +1688,11 @@ function renderStepContent(stepIdx: number, subStepIdx: number, { inspectionRepo
             <span className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center text-[12px] font-bold border border-indigo-100">10</span>
             <label className="text-[14px] font-bold text-gray-900 leading-tight">Check any tax exemption(s) which you (Seller) currently claim for the Property:</label>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 p-6 bg-gray-50 rounded-2xl border border-gray-100">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 p-6 bg-gray-50 rounded-2xl border border-gray-100">
             {taxExemptions.map(item => (
               <CheckboxItem key={item} label={item} />
             ))}
-            <div className="md:col-span-2 lg:col-span-3 pt-2">
-              <Question label="Other (please specify)" type="text" placeholder="Enter other exemption" />
-            </div>
+            <ExemptionOther />
           </div>
         </div>
 
@@ -1330,7 +1707,7 @@ function renderStepContent(stepIdx: number, subStepIdx: number, { inspectionRepo
               {['Yes', 'No'].map(opt => (
                 <label key={opt} className="cursor-pointer">
                   <input type="radio" name="ins-claim-gen" className="sr-only peer" />
-                  <div className="px-8 py-2 rounded-lg text-[12px] font-bold text-gray-400 peer-checked:bg-white peer-checked:text-indigo-600 peer-checked:shadow-sm transition-all uppercase">
+                  <div className="w-[80px] py-2.5 rounded-lg text-[12px] font-bold text-gray-400 peer-checked:bg-white peer-checked:text-indigo-600 peer-checked:shadow-sm transition-all uppercase text-center">
                     {opt}
                   </div>
                 </label>
@@ -1338,53 +1715,11 @@ function renderStepContent(stepIdx: number, subStepIdx: number, { inspectionRepo
             </div>
           </div>
 
-          <div className="p-6 bg-white rounded-3xl border-2 border-gray-100 space-y-4 hover:border-indigo-100 transition-colors">
-            <div className="flex items-start gap-4">
-              <span className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center text-[12px] font-bold border border-indigo-100 shrink-0">12</span>
-              <h4 className="text-[14px] font-bold text-gray-900 leading-tight">Ever received claim proceeds and NOT used them to make the repairs?</h4>
-            </div>
-            <div className="flex gap-2 p-1 bg-gray-100 rounded-xl border border-gray-200 w-fit ml-12">
-              {['Yes', 'No'].map(opt => (
-                <label key={opt} className="cursor-pointer">
-                  <input type="radio" name="unused-proceeds" className="sr-only peer" />
-                  <div className="px-8 py-2 rounded-lg text-[12px] font-bold text-gray-400 peer-checked:bg-white peer-checked:text-indigo-600 peer-checked:shadow-sm transition-all uppercase">
-                    {opt}
-                  </div>
-                </label>
-              ))}
-            </div>
-            <textarea 
-              placeholder="If yes, explain..."
-              className="w-full h-24 px-4 py-3 bg-gray-50 border-2 border-transparent rounded-2xl text-[13px] focus:bg-white focus:border-indigo-500/30 outline-none transition-all resize-none ml-0"
-            />
-          </div>
+          <Section12Card />
         </div>
 
         {/* Section 13: Smoke Detectors */}
-        <div className="p-5 md:p-8 bg-indigo-900 rounded-3xl text-white space-y-6 shadow-xl shadow-indigo-900/20 relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-8 opacity-10 hidden md:block">
-            <AlertTriangle className="w-32 h-32" />
-          </div>
-          <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6 md:gap-8">
-            <div className="flex items-center gap-4">
-              <span className="w-10 h-10 rounded-xl bg-white/10 text-white flex items-center justify-center text-[14px] font-bold border border-white/20 shrink-0">13</span>
-              <div>
-                <h4 className="text-[15px] md:text-[16px] font-bold leading-tight">Property has working smoke detectors installed?</h4>
-                <p className="text-[11px] md:text-[12px] text-indigo-200 mt-1">In accordance with Chapter 766 of the Health and Safety Code</p>
-              </div>
-            </div>
-            <div className="flex gap-1.5 p-1 bg-white/5 rounded-2xl border border-white/10 w-full sm:w-fit shrink-0 backdrop-blur-sm">
-              {['Yes', 'No', 'Unknown'].map(opt => (
-                <label key={opt} className="flex-1 sm:flex-none cursor-pointer">
-                  <input type="radio" name="smoke-detectors" className="sr-only peer" />
-                  <div className="px-3 md:px-8 py-2 md:py-3 rounded-xl text-[11px] md:text-[12px] font-black text-indigo-300 peer-checked:bg-white peer-checked:text-indigo-900 peer-checked:shadow-lg transition-all uppercase tracking-wide text-center">
-                    {opt === 'Unknown' ? 'U' : opt}
-                  </div>
-                </label>
-              ))}
-            </div>
-          </div>
-        </div>
+        <Section13Card />
 
         {/* Section 14: Utility Providers */}
         <div className="space-y-8">
@@ -1407,15 +1742,15 @@ function renderStepContent(stepIdx: number, subStepIdx: number, { inspectionRepo
                 </div>
                 <div className="space-y-3">
                   <div className="relative">
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       placeholder="Provider Name"
                       className="w-full px-4 py-2 bg-gray-50 border border-transparent rounded-xl text-[13px] focus:bg-white focus:border-indigo-500/30 outline-none transition-all"
                     />
                   </div>
                   <div className="relative">
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       placeholder="Phone #"
                       className="w-full px-4 py-2 bg-gray-50 border border-transparent rounded-xl text-[13px] focus:bg-white focus:border-indigo-500/30 outline-none transition-all"
                     />
@@ -1495,10 +1830,10 @@ function renderStepContent(stepIdx: number, subStepIdx: number, { inspectionRepo
         </div>
 
         {/* Final Submission Card */}
-        <div className="p-6 md:p-12 bg-gradient-to-br from-indigo-600 to-indigo-700 rounded-3xl text-white text-center shadow-2xl shadow-indigo-200 relative overflow-hidden">
+        <div className="p-6 md:p-12 bg-gradient-to-br from-indigo-600 to-indigo-700 rounded-3xl text-white text-center shadow-2xl shadow-indigo-200 relative overflow-hidden hidden">
           <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/5 rounded-full blur-3xl" />
           <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-white/5 rounded-full blur-3xl" />
-          
+
           <div className="relative z-10 max-w-lg mx-auto">
             <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-6 backdrop-blur-md border border-white/20">
               <CheckCircle2 className="w-8 h-8 text-white" />

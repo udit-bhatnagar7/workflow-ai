@@ -7,6 +7,7 @@ import { SchedulerCanvas } from './components/SchedulerCanvas';
 import { DashboardCanvas } from './components/DashboardCanvas';
 import { SellerWorkflowCanvas, SellerWorkspace } from './components/SellerWorkflowCanvas';
 import { SellerDisclosure } from './components/SellerDisclosure';
+import { ListingAgreement } from './components/ListingAgreement';
 
 export default function App() {
   const [activePage, setActivePage] = useState('dashboard');
@@ -19,13 +20,14 @@ export default function App() {
 
   return (
     <div className="flex h-screen w-full overflow-hidden bg-[#FAFAFA] font-sans text-[13px]">
-      <Sidebar activePage={activePage} setActivePage={setActivePage} />
+      {activePage !== 'listing-agreement' && <Sidebar activePage={activePage} setActivePage={setActivePage} />}
       {activePage === 'dashboard' && <DashboardCanvas setActivePage={setActivePage} />}
       {activePage === 'seller-workflow' && <SellerWorkflowCanvas />}
       {activePage === 'weather' && <WeatherCanvas />}
       {activePage === 'vendors' && <VendorsCanvas />}
       {activePage === 'templates' && <TemplatesCanvas />}
       {activePage === 'scheduler' && <SchedulerCanvas />}
+      {activePage === 'listing-agreement' && <ListingAgreement setActivePage={setActivePage} />}
       {activePage === 'seller-disclosure' && <SellerDisclosure />}
     </div>
   );

@@ -14,6 +14,7 @@ import {
   LayoutDashboard,
   FileSignature,
   FileText,
+  FileCheck,
   PanelLeftClose,
   PanelLeftOpen
 } from 'lucide-react';
@@ -24,7 +25,7 @@ export function Sidebar({ activePage, setActivePage }: { activePage: string, set
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   React.useEffect(() => {
-    if (activePage === 'seller-disclosure') {
+    if (activePage === 'seller-disclosure' || activePage === 'listing-agreement') {
       setIsCollapsed(true);
     }
   }, [activePage]);
@@ -34,7 +35,7 @@ export function Sidebar({ activePage, setActivePage }: { activePage: string, set
       initial={false}
       animate={{ width: isCollapsed ? 64 : 220 }}
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
-      className="flex-shrink-0 border-r border-[#EAEAEA] bg-[#FAFAFA] flex flex-col h-full relative"
+      className="hidden md:flex flex-shrink-0 border-r border-[#EAEAEA] bg-[#FAFAFA] flex-col h-full relative"
     >
       {/* Collapse Toggle Button */}
       <button 
@@ -101,6 +102,13 @@ export function Sidebar({ activePage, setActivePage }: { activePage: string, set
             label="Seller Workflow" 
             active={activePage === 'seller-workflow'} 
             onClick={() => setActivePage('seller-workflow')} 
+            isCollapsed={isCollapsed}
+          />
+          <NavItem 
+            icon={<FileCheck className="w-4 h-4 text-indigo-500" />} 
+            label="Listing Agreement" 
+            active={activePage === 'listing-agreement'} 
+            onClick={() => setActivePage('listing-agreement')} 
             isCollapsed={isCollapsed}
           />
           <NavItem 
