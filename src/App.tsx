@@ -8,6 +8,7 @@ import { DashboardCanvas } from './components/DashboardCanvas';
 import { SellerWorkflowCanvas, SellerWorkspace } from './components/SellerWorkflowCanvas';
 import { SellerDisclosure } from './components/SellerDisclosure';
 import { ListingAgreement } from './components/ListingAgreement';
+import { FormsDashboard } from './components/FormsDashboard';
 
 export default function App() {
   const [activePage, setActivePage] = useState('dashboard');
@@ -29,6 +30,7 @@ export default function App() {
       {activePage === 'scheduler' && <SchedulerCanvas />}
       {activePage === 'listing-agreement' && <ListingAgreement setActivePage={setActivePage} />}
       {activePage === 'seller-disclosure' && <SellerDisclosure />}
+      {activePage === 'forms-manager' && <FormsDashboard setActivePage={setActivePage} />}
     </div>
   );
 }

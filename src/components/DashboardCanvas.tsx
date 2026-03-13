@@ -30,7 +30,7 @@ export function DashboardCanvas({ setActivePage }: { setActivePage: (page: strin
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto p-8 max-w-7xl mx-auto w-full">
+      <div className="flex-1 overflow-y-auto p-8 mx-auto w-full">
         <div className="mb-8 flex justify-between items-end">
           <div>
             <h1 className="text-[28px] font-semibold tracking-tight text-gray-900 mb-2">

@@ -72,9 +72,6 @@ export function Sidebar({ activePage, setActivePage }: { activePage: string, set
             onClick={() => setActivePage('dashboard')} 
             isCollapsed={isCollapsed}
           />
-          <NavItem icon={<Inbox className="w-4 h-4" />} label="Inbox" badge="3" isCollapsed={isCollapsed} />
-          <NavItem icon={<Home className="w-4 h-4" />} label="Active Listings" isCollapsed={isCollapsed} />
-          <NavItem icon={<LayoutGrid className="w-4 h-4" />} label="Views" isCollapsed={isCollapsed} />
           
           {!isCollapsed ? (
             <div className="mt-6 mb-2 px-2 text-[11px] font-medium text-gray-400 uppercase tracking-wider overflow-hidden whitespace-nowrap">
@@ -96,7 +93,13 @@ export function Sidebar({ activePage, setActivePage }: { activePage: string, set
             onClick={() => setActivePage('scheduler')} 
             isCollapsed={isCollapsed}
           />
-          <NavItem icon={<Network className="w-4 h-4 text-blue-500" />} label="Workflows" isCollapsed={isCollapsed} />
+          <NavItem 
+            icon={<Building className="w-4 h-4 text-emerald-500" />} 
+            label="Vendors" 
+            active={activePage === 'vendors'} 
+            onClick={() => setActivePage('vendors')} 
+            isCollapsed={isCollapsed}
+          />
           <NavItem 
             icon={<FileSignature className="w-4 h-4 text-emerald-500" />} 
             label="Seller Workflow" 
@@ -104,6 +107,13 @@ export function Sidebar({ activePage, setActivePage }: { activePage: string, set
             onClick={() => setActivePage('seller-workflow')} 
             isCollapsed={isCollapsed}
           />
+          
+          {!isCollapsed ? (
+            <div className="mt-6 mb-2 px-2 text-[11px] font-medium text-gray-400 uppercase tracking-wider overflow-hidden whitespace-nowrap">
+              Listing Preparation
+            </div>
+          ) : <div className="h-4 mt-6" />}
+
           <NavItem 
             icon={<FileCheck className="w-4 h-4 text-indigo-500" />} 
             label="Listing Agreement" 
@@ -119,10 +129,10 @@ export function Sidebar({ activePage, setActivePage }: { activePage: string, set
             isCollapsed={isCollapsed}
           />
           <NavItem 
-            icon={<Building className="w-4 h-4 text-emerald-500" />} 
-            label="Vendors" 
-            active={activePage === 'vendors'} 
-            onClick={() => setActivePage('vendors')} 
+            icon={<LayoutGrid className="w-4 h-4 text-blue-500" />} 
+            label="Documents Manager" 
+            active={activePage === 'forms-manager'} 
+            onClick={() => setActivePage('forms-manager')} 
             isCollapsed={isCollapsed}
           />
 
